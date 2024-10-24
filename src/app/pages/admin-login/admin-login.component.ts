@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AdminService } from '../../services/admin.service';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-admin-login',
@@ -11,8 +12,9 @@ import { CommonModule } from '@angular/common';
   templateUrl: './admin-login.component.html',
   styleUrl: './admin-login.component.css'
 })
-export class AdminLoginComponent {
+export class AdminLoginComponent implements OnDestroy{
   loginForm!:FormGroup
+  private _subscription: Subscription = new Subscription(); // Subscription to track observables
 
   constructor(private _fb:FormBuilder , private _router:Router , private _adminservice:AdminService){
 
@@ -32,11 +34,17 @@ export class AdminLoginComponent {
       }
 
       console.log(adminData)
-      this._adminservice.loginAdmin(adminData).subscribe((res:any)=>{
+      const loginSub =this._adminservice.loginAdmin(adminData).subscribe((res:any)=>{
         console.log("admin Login successfully",res)
         localStorage.setItem('admintoken',res.token)
         this._router.navigate(['/userlist'])
       })
+
+      this._subscription.add(loginSub);
     }
+  }
+
+  ngOnDestroy() {
+    this._subscription.unsubscribe();
   }
 }

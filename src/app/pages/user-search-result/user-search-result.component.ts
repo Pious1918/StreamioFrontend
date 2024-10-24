@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../shared/components/user-header/header.component';
 import { SidepanelComponent } from '../../shared/components/user-sidepanel/sidepanel.component';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { selectUser } from '../../store/user.selector';
 import { FormsModule } from '@angular/forms';
 
@@ -17,7 +17,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './user-search-result.component.html',
   styleUrl: './user-search-result.component.css'
 })
-export class UserSearchResultComponent implements OnInit  {
+export class UserSearchResultComponent implements OnInit, OnDestroy  {
   searchQuery: string = '';
   users: any[] = [];
   loading: boolean = true;
@@ -25,6 +25,10 @@ export class UserSearchResultComponent implements OnInit  {
  user$!:Observable<any>
 
  userFollow:string[]=[]
+
+ private _subscriptions: Subscription = new Subscription(); // Manage all subscriptions
+
+
   constructor(
     private route: ActivatedRoute, 
     private http: HttpClient , 
@@ -36,17 +40,19 @@ export class UserSearchResultComponent implements OnInit  {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    const queryParamSub = this.route.queryParams.subscribe(params => {
       this.searchQuery = params['query']; // Extract the search query from the URL
       this.fetchResults();
     });
+    this._subscriptions.add(queryParamSub);
 
 
-    this.user$.subscribe((res) => {
+    const userSub =this.user$.subscribe((res) => {
       console.log("response from searchbar", res.userProfile.following);
       this.userFollow = [...res.userProfile.following]; // Create a new array
     });
     
+    this._subscriptions.add(userSub);
 
 
     console.log("userer",this.userFollow)
@@ -56,7 +62,7 @@ private userServiceUrl = 'http://localhost:5000/user-service'
   fetchResults() {
 
    
-    this.http
+    const fetchSub = this.http
       .get<any[]>(`http://localhost:5000/user-service/users?name=${this.searchQuery}`)
       .subscribe(
         (response) => {
@@ -68,12 +74,13 @@ private userServiceUrl = 'http://localhost:5000/user-service'
           this.loading = false;
         }
       );
+      this._subscriptions.add(fetchSub);
   }
 
 
   subscribeCh(userid: string) {
     console.log("Before subscribing, userFollow:", this.userFollow);
-    this._userService.subscribeChannel(userid).subscribe((res) => {
+    const subscribeSub = this._userService.subscribeChannel(userid).subscribe((res) => {
       console.log(res);
       if (Array.isArray(this.userFollow)) {
         this.userFollow.push(userid); // Add the user ID to the following array
@@ -81,17 +88,23 @@ private userServiceUrl = 'http://localhost:5000/user-service'
         console.error("userFollow is not an array:", this.userFollow);
       }
     });
+
+    this._subscriptions.add(subscribeSub);
   }
   
 
 
   unsubscribe(userid: string) {
-    this._userService.unsubscribeChannel(userid).subscribe((res) => {
+    const unsubscribeSub = this._userService.unsubscribeChannel(userid).subscribe((res) => {
       console.log(res);
       this.userFollow = this.userFollow.filter(id => id !== userid); // Filter without mutation
     });
+    this._subscriptions.add(unsubscribeSub);
   }
   
 
-  
+  ngOnDestroy() {
+    // Unsubscribe from all active subscriptions
+    this._subscriptions.unsubscribe();
+  }
 }

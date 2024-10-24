@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import Swal from 'sweetalert2'
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-user-login',
@@ -12,12 +13,15 @@ import Swal from 'sweetalert2'
   templateUrl: './user-login.component.html',
   styleUrl: './user-login.component.css'
 })
-export class UserLoginComponent {
+export class UserLoginComponent implements OnDestroy {
 
   loginForm!: FormGroup
   registerForm!: FormGroup;
   isLoginActive: boolean = true;
-
+  data$ = interval(1000)
+  datasubscribion!: Subscription;
+  /**this is store all the subscription */
+  private _subscription: Subscription = new Subscription()
 
   constructor(private _fb: FormBuilder, private _router: Router, private _userservice: UserService) {
 
@@ -38,6 +42,11 @@ export class UserLoginComponent {
       country: ['', [Validators.required]]
     }, { validators: this.passwordMatchValidator }); // Attach custom validator here)
 
+
+
+    this.datasubscribion = this.data$.subscribe((data) => {
+      console.log("data is", data)
+    })
   }
 
 
@@ -75,12 +84,15 @@ export class UserLoginComponent {
       }
 
       console.log("userdata", userdata)
-      this._userservice.loginUser(userdata).subscribe((res: any) => {
+
+      const loginSub=this._userservice.loginUser(userdata).subscribe((res: any) => {
         console.log("Login successfully", res)
         localStorage.setItem('authtoken', res.token)
         this._router.navigate(['/'])
         this.showsuccess()
       })
+
+      this._subscription.add(loginSub)
     }
   }
 
@@ -108,24 +120,32 @@ export class UserLoginComponent {
       console.log('Register Data:', this.registerForm.value);
 
       let userData = {
-        username:this.registerForm.value.username,
-        password : this.registerForm.value.password,
-        cpassword : this.registerForm.value.cpassword,
-        email : this.registerForm.value.email,
-        mobile : this.registerForm.value.mobile,  
-        country : this.registerForm.value.country,  
+        username: this.registerForm.value.username,
+        password: this.registerForm.value.password,
+        cpassword: this.registerForm.value.cpassword,
+        email: this.registerForm.value.email,
+        mobile: this.registerForm.value.mobile,
+        country: this.registerForm.value.country,
       }
       console.log('userData Data:', userData);
 
 
-      this._userservice.registerUser(userData).subscribe((res:any)=>{
-        console.log("new user added successfully",res)
-        localStorage.setItem('authtoken',res.token)
-        
+      const registerSub = this._userservice.registerUser(userData).subscribe((res: any) => {
+        console.log("new user added successfully", res)
+        localStorage.setItem('authtoken', res.token)
+
         this._router.navigate(['/'])
         this.showsuccess()
-        
+
       })
+
+      this._subscription.add(registerSub)
     }
+  }
+
+
+  ngOnDestroy(): void {
+    this.datasubscribion.unsubscribe()
+    this._subscription.unsubscribe()
   }
 }

@@ -19,6 +19,12 @@
                 <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500" (click)="onSearch()">
                     <i class="fas fa-search"></i>
                 </button>
+                <button 
+                *ngIf="searchTerm" 
+                class="absolute right-8 top-1/2 transform -translate-y-1/2 text-gray-500"
+                (click)="clearSearch()">
+                <i class="fas fa-times"></i> <!-- Font Awesome cross icon -->
+            </button>
             </div>
         </div>
 

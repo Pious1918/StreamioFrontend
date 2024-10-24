@@ -1,0 +1,15 @@
+input {
+    /* Adjust padding to ensure the buttons fit within the input */
+    padding-right: 3rem;
+  }
+  
+  /* Button to clear the search input */
+  button {
+    cursor: pointer;
+  }
+  
+  /* Adjust alignment of search and clear buttons */
+  button i {
+    font-size: 1rem;
+  }
+  
