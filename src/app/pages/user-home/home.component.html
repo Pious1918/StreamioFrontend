@@ -1,53 +1,94 @@
-
 <app-header></app-header>
 
 
-    <!-- Landing Section with Background Image -->
-    <section class="relative w-full h-screen bg-cover bg-center" style="background-image: url('assets/poster.webp');">
-        
-        <!-- Overlay -->
-        <div class="container absolute inset-0 bg-black bg-opacity-60"></div>
+<!-- Landing Section with Background Image -->
+<!-- <section class="relative w-full h-screen bg-cover bg-center" style="background-image: url('assets/poster.webp');"> -->
 
-        <!-- Content -->
-        <div class="container mx-auto h-full flex flex-col justify-center items-center text-center px-4 relative z-10">
-            
-            <!-- Play Button -->
-            <button class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full font-bold text-lg transition duration-300 mb-4">
+<!-- Overlay -->
+<!-- <div class="container absolute inset-0 bg-black bg-opacity-60"></div> -->
+
+<!-- Content -->
+<!-- <div class="container mx-auto h-full flex flex-col justify-center items-center text-center px-4 relative z-10"> -->
+
+<!-- Play Button -->
+<!-- <button class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full font-bold text-lg transition duration-300 mb-4">
                 <i class="fas fa-play"></i> Play
-            </button>
+            </button> -->
 
-            <!-- Headline -->
-            <p class="text-xl md:text-3xl lg:text-4xl text-white font-semibold mb-6">
+<!-- Headline -->
+<!-- <p class="text-xl md:text-3xl lg:text-4xl text-white font-semibold mb-6">
                 Your Next Favorite Movie Awaits
-            </p>
+            </p> -->
 
-            <!-- Main Title -->
-            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4">
+<!-- Main Title -->
+<!-- <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4">
                 Unlimited Movies, TV Shows, and More.
-            </h1>
+            </h1> -->
 
-            <!-- Subheading -->
-            <p class="text-lg md:text-2xl lg:text-3xl text-white mb-8">
+<!-- Subheading -->
+<!-- <p class="text-lg md:text-2xl lg:text-3xl text-white mb-8">
                 Watch anywhere. Cancel anytime.
-            </p>
-
-       
-        </div>
+            </p> -->
 
 
+<!-- </div> -->
 
-        
+<section>
+ 
+ 
 
-
-
-
-    </section>
-
-
-
- <section class="relative w-full h-screen bg-cover bg-center" style="background-image: url('https://source.unsplash.com/1600x900/?movie');">
-    <div class="absolute inset-0 bg-black bg-opacity-60"></div> 
+    <div class="carousel">
+        <div class="list">
+            <div class="item" *ngFor="let item of items">
+                <img [src]="item.img" alt="">
+                <div class="content">
+                    <div class="author">{{item.author}}</div>
+                    <div class="title">{{item.title}}</div>
+                    <div class="topics">{{item.topics}}</div>
+                    <div class="des">{{item.des}}</div>
+                    <div class="buttons">
+                        <button (click)="onSeeMore(item)">See More</button>
+                        <button (click)="onSeeMore(item)">See More</button>
+                    </div>
+                </div>
+            </div>
+        </div> 
     
+        <!-- thumbnail -->
+        <div class="thumbnail">
+            <div class="item" *ngFor="let item of thumbnails">
+                <img [src]="item.img" alt="">
+                <div class="content">
+                    <div class="title">{{item.title}}</div>
+                    <div class="des">{{item.des}}</div>
+                </div>
+            </div>
+        </div> 
+    
+        <!-- arrows -->
+        <div class="arrows">
+            <button id="prev" (click)="showSlider('prev')">
+                <</button>
+            <button id="next" (click)="showSlider('next')">></button>
+        </div>
+    
+        <div class="time"></div>
+    </div>
+    
+  
+
+
+
+
+
+</section>
+
+
+
+<section class="relative w-full h-screen bg-cover bg-center"
+    style="background-image: url('https://source.unsplash.com/1600x900/?movie');">
+    <div class="absolute inset-0  bg-opacity-60"></div>
+
     <div class="container mx-auto h-full flex flex-col justify-center items-center text-center px-4">
         <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-black mb-4">
             Unlimited Movies, TV Shows, and More.
@@ -55,7 +96,8 @@
         <p class="text-lg md:text-2xl lg:text-3xl text-white mb-8">
             Watch anywhere. Cancel anytime.
         </p>
-        <a href="#" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full font-bold text-lg md:text-xl transition duration-300">
+        <a href="#"
+            class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full font-bold text-lg md:text-xl transition duration-300">
             Get Started
         </a>
     </div>
@@ -64,3 +106,4 @@
 
 
 <app-sidepanel></app-sidepanel>
+
