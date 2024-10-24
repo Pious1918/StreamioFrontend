@@ -1,0 +1,32 @@
+<!-- Transparent Header -->
+<header class="w-full fixed top-0 left-0 z-10 bg-transparent p-4">
+    <div class="container mx-auto flex justify-between items-center">
+
+        <!-- Logo -->
+        <div class="flex-shrink-0">
+            <a href="">
+                <img src="assets/logored.png" alt="Logo" class="h-16 w-auto">
+            </a>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="flex-grow mx-4 max-w-xl">
+            <div class="relative">
+                <input  type="text"
+                [(ngModel)]="searchTerm"
+                (keyup.enter)="onSearch()"
+                placeholder="Search..." class="w-full py-2 pl-4 pr-10 rounded-full border border-gray-300 focus:outline-none focus:border-blue-400">
+                <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500" (click)="onSearch()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Profile Icon -->
+        <div class="flex-shrink-0">
+            <a href="">
+                <img [src]="(userProfile?.profilepicture === 'noImage' ? defaultProfilePic : userProfile?.profilepicture)" alt="Profile Image" class="h-12 w-12 rounded-full object-cover">
+            </a>
+        </div>
+    </div>
+</header>

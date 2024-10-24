@@ -1,0 +1,50 @@
+<!-- Tailwind Admin Login Page -->
+<div class="flex justify-center items-center h-screen bg-gray-100">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+      
+      <!-- Logo -->
+      <div class="flex justify-center mb-6">
+        <img src="assets/logored.png" alt="Streamio Logo" class="w-24 h-24">
+      </div>
+      
+      <!-- Heading -->
+      <h1 class="text-2xl font-bold text-center mb-6">Admin Login</h1>
+      
+      <!-- Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
+        
+        <!-- Email Field -->
+        <div class="relative">
+          <label class="block text-sm font-medium text-gray-700">Enter your Email</label>
+          <input type="email" formControlName="email"
+                 class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                 placeholder="Email">
+          <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.hasError('required')" class="text-red-500 text-sm mt-1">
+            Email is required
+          </div>
+        </div>
+        
+        <!-- Password Field -->
+        <div class="relative">
+          <label class="block text-sm font-medium text-gray-700">Enter your Password</label>
+          <input type="password" formControlName="password"
+                 class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                 placeholder="Password">
+          <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.hasError('required')" class="text-red-500 text-sm mt-1">
+            Password is required
+          </div>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="flex justify-center">
+          <button type="submit"
+                  class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors">
+            Login
+          </button>
+        </div>
+        
+      </form>
+      
+    </div>
+  </div>
+  

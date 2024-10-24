@@ -1,0 +1,175 @@
+<app-header></app-header>
+
+<section class="container mx-auto mt-20 p-6 flex flex-col items-center gap-8">
+    <!-- Toggle Button -->
+    <a (click)="toggleProfile()" class="bg-blue-500 text-white p-2 rounded-lg mb-4 inline-block cursor-pointer">
+        {{ isProfileVisible ? 'Hide Profile' : 'Show Profile' }}
+    </a>
+
+    <!-- Profile Section -->
+    <div [ngClass]="{ 'profile-section': true, 'visible': isProfileVisible }" class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2 items-center">
+        <!-- Profile Picture with Camera Icon -->
+        <div class="flex justify-end mb-6 mr-4">
+            <div class="relative">
+                <img [src]="selectedImage || userProfile?.profilepicture || defaultImage" alt="Profile Picture" class="w-24 h-24 rounded-full object-cover">
+                <button (click)="fileInput.click()"
+                        class="absolute top-0 right-0 bg-blue-500 text-white p-1 rounded-full focus:outline-none hover:bg-blue-600">
+                    <i class="fas fa-camera"></i>
+                </button>
+                <input type="file"  id="fileInput" #fileInput (change)="onImageSelected($event)" style="display: none;">
+            </div>
+            
+            <!-- Conditional Save/Cancel Buttons -->
+            <div *ngIf="isPreviewing" class="mt-2 flex space-x-2">
+                <button (click)="saveImage()" class="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600">Save</button>
+                <button (click)="cancelImage()" class="bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600">Cancel</button>
+            </div>
+        </div>
+        
+
+        <!-- User Information -->
+        <div class="flex-grow space-y-4">
+            <div class="text-center">
+                <label class="block text-gray-600">Email</label>
+                <input type="email"
+                    class="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500 text-center"
+                    placeholder="user@example.com" disabled [(ngModel)]="userProfile.email">
+            </div>
+            <div class="text-center">
+                <label class="block text-gray-600">Username</label>
+                <input type="text"
+                    class="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500 text-center"
+                    placeholder="Username" [disabled]="!isEditing" [(ngModel)]="userProfile.name">
+            </div>
+
+            <div class="text-center">
+                <label class="block text-gray-600">Mobile</label>
+                <input type="text"
+                    class="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500 text-center"
+                    placeholder="123-456-7890" [disabled]="!isEditing" [(ngModel)]="userProfile.phonenumber">
+            </div>
+            <div class="text-center">
+                <label class="block text-gray-600">Country</label>
+                <input type="text"
+                    class="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500 text-center"
+                    placeholder="Country" [disabled]="!isEditing" [(ngModel)]="userProfile.country">
+            </div>
+
+            <!-- Buttons: Edit/Save/Cancel -->
+            <div class="flex justify-center mt-4">
+                <button *ngIf="!isEditing" (click)="startEditing()"
+                    class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600">Edit</button>
+                <div *ngIf="isEditing" class="flex space-x-4">
+                    <button (click)="saveChanges()"
+                        class="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600">Save</button>
+                    <button (click)="cancelEditing()"
+                        class="bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="container mx-auto mt-10 p-6 flex flex-col items-center gap-8">
+    <!-- Uploaded Videos Section -->
+    <div class="w-full md:w-3/4 lg:w-2/3">
+        <h2 class="text-2xl font-bold text-gray-700 mb-4 text-center">Uploaded Videos</h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Increased gap for proper spacing -->
+
+        <div
+            class="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 w-full md:w-72 lg:w-80 mb-2">
+            <!-- Adjusted margin-bottom -->
+            <div class="relative h-60">
+                <img src="assets/thumbnail4.jpg" alt="Video Thumbnail" class="rounded-md w-full h-full object-fit">
+                <div
+                    class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                    <div class="text-white text-center">
+                        <h3 class="text-xl font-bold">Video Title 5</h3>
+                        <p class="text-gray-300">Uploaded on: Apr 20, 2024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 w-full md:w-72 lg:w-80 mb-2">
+            <div class="relative h-60">
+                <img src="assets/thumbnail.jpg" alt="Video Thumbnail" class="rounded-md w-full h-full object-fit">
+                <div
+                    class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                    <div class="text-white text-center">
+                        <h3 class="text-xl font-bold">Video Title 2</h3>
+                        <p class="text-gray-300">Uploaded on: Feb 5, 2024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 w-full md:w-72 lg:w-80 mb-2">
+            <div class="relative h-60">
+                <img src="assets/thumbnail.jpg" alt="Video Thumbnail" class="rounded-md w-full h-full object-fit">
+                <div
+                    class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                    <div class="text-white text-center">
+                        <h3 class="text-xl font-bold">Video Title 2</h3>
+                        <p class="text-gray-300">Uploaded on: Feb 5, 2024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 w-full md:w-72 lg:w-80 mb-2">
+            <div class="relative h-60">
+                <img src="assets/thumbnail.jpg" alt="Video Thumbnail" class="rounded-md w-full h-full object-fit">
+                <div
+                    class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                    <div class="text-white text-center">
+                        <h3 class="text-xl font-bold">Video Title 2</h3>
+                        <p class="text-gray-300">Uploaded on: Feb 5, 2024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 w-full md:w-72 lg:w-80 mb-2">
+            <div class="relative h-60">
+                <img src="assets/thumbnail.jpg" alt="Video Thumbnail" class="rounded-md w-full h-full object-fit">
+                <div
+                    class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                    <div class="text-white text-center">
+                        <h3 class="text-xl font-bold">Video Title 2</h3>
+                        <p class="text-gray-300">Uploaded on: Feb 5, 2024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 w-full md:w-72 lg:w-80 mb-2">
+            <div class="relative h-60">
+                <img src="assets/thumbnail.jpg" alt="Video Thumbnail" class="rounded-md w-full h-full object-fit">
+                <div
+                    class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                    <div class="text-white text-center">
+                        <h3 class="text-xl font-bold">Video Title 2</h3>
+                        <p class="text-gray-300">Uploaded on: Feb 5, 2024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add more video cards as needed -->
+    </div>
+
+</section>
+
+
+
+
+<app-sidepanel></app-sidepanel>
