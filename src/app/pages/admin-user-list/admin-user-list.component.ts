@@ -5,25 +5,14 @@ import { AdminHeaderComponent } from '../../shared/components/admin-header/admin
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { User } from '../../interfaces/user.interfaces';
+import { UserStatus } from '../../enums/userStatusenum';
 
 
 
-export interface User {
-  _id: string;
-  name: string;
-  email: string;
-  phonenumber?: string;
-  country?: string;
-  profilepicture?: string;
-  updatedProfile?: User;
-  status?: UserStatus;
-  profilePicUrl?: string;
-}
 
-export enum UserStatus {
-  Active = 'active',
-  Blocked = 'blocked'
-}
+
+
 
 @Component({
   selector: 'app-admin-user-list',
@@ -40,31 +29,59 @@ export class AdminUserListComponent implements OnInit {
   userList: any[] = []
 
   // Pagination variables
-  paginatedUserList: User[] = [];
+
+
   currentPage: number = 1;
-  pageSize: number = 10;
-  totalItems: number = 0;
-  totalPages: number[] = [];
-  pageSizes: number[] = [10, 15, 20];
+  totalPages: number = 0;
+  limit: number = 6;
+
 
   private _subscription: Subscription = new Subscription(); // To track all subscriptions
 
   constructor(private _adminservice: AdminService) { }
 
   ngOnInit(): void {
-    this.loadAdmin();
+    this.loadAdmin(this.currentPage);
   }
 
 
-  loadAdmin() {
-    const adminSub = this._adminservice.loadAdmindash().subscribe((res: any) => {
+  loadAdmin(page: number) {
+    const adminSub = this._adminservice.loadAdmindash(page, this.limit).subscribe((res: any) => {
       console.log(res.users)
       this.userList = res.users
+      this.totalPages = res.totalPages;
+      this.currentPage = res.currentPage;
+      console.log("resopons is ", res)
+
+      console.log("total page is ", this.totalPages)
+      console.log("total page is ", this.totalPages)
+      console.log("res.currentPage ", this.currentPage)
 
     })
 
     this._subscription.add(adminSub); // Add to subscription tracker
 
+  }
+
+
+  changePage(page: number): void {
+    console.log("hai from change page")
+    if (page > 0 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.loadAdmin(page);
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.changePage(this.currentPage + 1);
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.changePage(this.currentPage - 1);
+    }
   }
 
 
@@ -110,6 +127,8 @@ export class AdminUserListComponent implements OnInit {
     });
   }
 
+
+
   ngOnDestroy(): void {
     this._subscription.unsubscribe();
   }
@@ -121,35 +140,6 @@ export class AdminUserListComponent implements OnInit {
 
 
 
-
-  // Calculate total number of pages
-  calculateTotalPages(): void {
-    const pages = Math.ceil(this.totalItems / this.pageSize);
-    this.totalPages = Array.from({ length: pages }, (_, i) => i + 1);
-  }
-
-  // Update the paginated user list to display only the current page
-  updatePaginatedList(): void {
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.paginatedUserList = this.userList.slice(start, end);
-  }
-
-  // Handle page size change
-  onPageSizeChange(event: any): void {
-    this.pageSize = parseInt(event.target.value, 10);
-    this.currentPage = 1; // Reset to first page
-    this.loadAdmin();
-  }
-
-  // Change page
-  changePage(page: number): void {
-    if (page < 1 || page > this.totalPages.length) {
-      return;
-    }
-    this.currentPage = page;
-    this.updatePaginatedList();
-  }
 
 
 }

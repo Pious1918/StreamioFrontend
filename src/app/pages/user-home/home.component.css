@@ -315,3 +315,29 @@ app-sidepanel {
         font-size: 30px;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* style of video list */
+
+
+.movie-card {
+    @apply transition-transform duration-300 hover:scale-105;
+  }
+  
+  .movie-card:hover .movie-overlay {
+    @apply opacity-100;
+  }

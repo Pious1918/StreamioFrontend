@@ -1,76 +1,116 @@
-<app-admin-header></app-admin-header>
+<!-- Pagination -->
 
-<div class="container mx-auto p-4 mt-20"> <!-- Updated margin-top to mt-20 -->
-  <!-- Table Container -->
-  <div class="relative overflow-x-auto shadow-lg sm:rounded-lg bg-gray-50 dark:bg-gray-800">
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-      <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-        <tr>
-          <th scope="col" class="px-6 py-3">Image</th>
-          <th scope="col" class="px-6 py-3">Username</th>
-          <th scope="col" class="px-6 py-3">Subscribers</th>
-          <th scope="col" class="px-6 py-3">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of userList" class="bg-white border-b dark:bg-gray-900 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
-          <!-- Profile Image -->
-          <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-            <img class="w-20 h-20 md:w-24 md:h-24 mb-3 rounded-full object-cover shadow-lg"
-                 [src]="user.profilepicture === 'noImage' ? defaultProfilePic : user.profilepicture"
-                 alt="Profile Picture" />
-          </th>
-          
-          <!-- Username -->
-          <td class="px-6 py-4 text-gray-900 dark:text-white">{{ user.name }}</td>
-          
-          <!-- Subscribers -->
-          <td class="px-6 py-4 text-gray-900 dark:text-white">{{ user.subscribers?.length || 0 }}</td>
-          
-          <!-- Status Button -->
-          <td class="px-6 py-4">
-            <button *ngIf="user.status === 'active'"
-                    (click)="toggleUserStatus(user)"
-                    class="inline-block rounded bg-red-500 px-4 py-2 text-xs font-medium text-white shadow transition duration-150 ease-in-out hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300">
-              Block
-            </button>
 
-            <button *ngIf="user.status === 'blocked'"
-                    (click)="toggleUserStatus(user)"
-                    class="inline-block rounded bg-green-500 px-4 py-2 text-xs font-medium text-white shadow transition duration-150 ease-in-out hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300">
-              Unblock
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+
+
+<!-- component -->
+<div class="riva-template p-8 mt-14">
+  <div class="flex flex-wrap -mx-3 mb-5">
+    <div class="w-full max-w-full px-3 mb-6 mx-auto">
+      <div
+        class="relative flex-[1_auto] flex flex-col break-words min-w-0 bg-clip-border rounded-[.95rem] bg-white m-5">
+        <div
+          class="relative flex flex-col min-w-0 break-words border border-dashed bg-clip-border rounded-2xl border-stone-200 bg-light/30">
+          <div class="flex-auto block py-8 pt-6 px-9">
+            <div class="overflow-x-auto">
+              <table class="w-full my-0 align-middle text-dark border-neutral-200">
+                <thead class="align-bottom">
+                  <tr
+                    class="grid border-b border-dashed border-black font-semibold text-blue-600 text-[0.95rem] text-secondary-dark"
+                    style="grid-template-columns: 1fr 1fr 1fr;">
+                    <th class="pb-3 text-start">USER</th>
+                    <th class="pb-3 text-center">Subscribers</th>
+                    <th class="pb-3 text-end pr-8">STATUS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let user of userList" class="grid border-b border-dashed last:border-b-0"
+                    style="grid-template-columns: 1fr 1fr 1fr;">
+                    <!-- USER Column -->
+                    <td class="p-3 pl-0">
+                      <div class="flex flex-col md:flex-row md:items-center md:space-x-2">
+                        <div class="relative inline-block shrink-0 rounded-2xl mb-2 md:mb-0">
+                          <img [src]="user.profilepicture === 'noImage' ? defaultProfilePic : user.profilepicture"
+                            class="w-[50px] h-[50px] inline-block shrink-0 rounded-2xl" alt="">
+                        </div>
+                        <div class="flex flex-col text-center md:text-left">
+                          <a
+                            class="font-semibold transition-colors duration-200 ease-in-out text-lg/normal text-secondary-inverse hover:text-primary">
+                            {{ user.name }}
+                          </a>
+                        </div>
+                      </div>
+                    </td>
+
+                    <!-- Subscribers Column -->
+                    <td class="p-3 text-center">
+                      <span
+                        class="text-center align-baseline inline-flex px-2 py-1 items-center font-semibold text-base text-success bg-success-light rounded-lg">
+                        {{ user.subscribers?.length || 0 }}
+                      </span>
+                    </td>
+
+                    <!-- STATUS Column -->
+                    <td class="p-3 pr-8 text-end">
+                      <button *ngIf="user.status === 'active'" (click)="toggleUserStatus(user)"
+                        class="inline-block rounded bg-red-500 px-4 py-2 text-xs font-medium text-white shadow transition duration-150 ease-in-out hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300">
+                        Block
+                      </button>
+
+                      <button *ngIf="user.status === 'blocked'" (click)="toggleUserStatus(user)"
+                        class="inline-block rounded bg-green-500 px-4 py-2 text-xs font-medium text-white shadow transition duration-150 ease-in-out hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300">
+                        Unblock
+                      </button>
+                    </td>
+
+                  </tr>
+                </tbody>
+              </table>
+
+             
+            </div>
+            
+          </div>
+          <nav aria-label="Page navigation" class="mt-4">
+            <ul class="inline-flex -space-x-px text-sm">
+                <li>
+                    <button (click)="changePage(currentPage - 1)" 
+                            [disabled]="currentPage === 1"
+                            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700">
+                        Previous
+                    </button>
+                </li>
+                <li *ngFor="let page of [].constructor(totalPages); let i = index">
+                    <button (click)="changePage(i + 1)" 
+                            [class]="i + 1 === currentPage ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
+                            class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                        {{ i + 1 }}
+                    </button>
+                </li>
+                <li>
+                    <button (click)="changePage(currentPage + 1)" 
+                            [disabled]="currentPage === totalPages"
+                            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700">
+                        Next
+                    </button>
+                </li>
+            </ul>
+        </nav>
+        
+        
+        </div>
+      </div>
+    </div>
+
+    
+
+
   </div>
 
-  <!-- Pagination -->
-  <!-- <nav aria-label="Page navigation example" class="mt-6">
-    <ul class="inline-flex -space-x-px text-sm">
-      <li>
-        <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
-      </li>
-      <li>
-        <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-      </li>
-      <li>
-        <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-      </li>
-      <li>
-        <a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-      </li>
-      <li>
-        <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">4</a>
-      </li>
-      <li>
-        <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">5</a>
-      </li>
-      <li>
-        <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
-      </li>
-    </ul>
-  </nav> -->
 
 </div>
+
+
+
+
+  

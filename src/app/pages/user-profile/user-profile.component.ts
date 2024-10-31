@@ -9,6 +9,7 @@ import { loadUserProfile, updateProfilePicture, updateUserProfile } from '../../
 import { interval, Observable, Subscription } from 'rxjs';
 import { selectUser } from '../../store/user.selector';
 import { HttpClient } from '@angular/common/http';
+import { VideoService } from '../../services/video.service';
 
 
 
@@ -38,41 +39,58 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   selectedFile: File | null = null;  // to store the actual file for uploading
   uploadProgress: string = '';
 
-  data$ = interval(1000)
+
   private subscription!: Subscription;
   datasubscribion!: Subscription;
 
   constructor(
     private _userService: UserService,
     private _store: Store,
-    private _http: HttpClient
+    private _http: HttpClient,
+    private _videoService: VideoService
   ) {
 
     this.user$ = this._store.pipe(select(selectUser));
   }
-
+  userId: string = ''
 
   ngOnInit(): void {
     this._store.dispatch(loadUserProfile());
 
     this.subscription = this.user$.subscribe((user: any) => {
+
+      this.userId = user._id
       if (user && user.updatedProfile) {
         this.userProfile = { ...user.updatedProfile };
       } else {
         this.userProfile = { ...user.userProfile };
+        console.log("fdfafasfdsfasf", this.userId)
       }
 
       console.log("this.userpro", this.userProfile)
       // Create a backup of the original profile when the component is first loaded
       this.originalUserProfile = { ...this.userProfile };
+
+
+
     });
 
 
-    this.datasubscribion = this.data$.subscribe((data) => {
-      console.log("data is", data)
-    })
+
+    // this.uploadedVideos()
+
+
+
   }
 
+
+
+  // async uploadedVideos() {
+
+  //   await this._videoService.getUploadedVideos().subscribe((res)=>{
+  //     console.log("response is fromm videoss",res)
+  //   })
+  // }
 
 
 
@@ -92,11 +110,11 @@ export class UserProfileComponent implements OnInit, OnDestroy {
    * Saves the changes made to the user's profile.
    */
   saveChanges(): void {
-     if (JSON.stringify(this.userProfile) === JSON.stringify(this.originalUserProfile)) {
-    console.log("No changes made, not calling api unnecessarily");
-    this.isEditing = false;
-    return; // Exit the function without making an API call
-  }
+    if (JSON.stringify(this.userProfile) === JSON.stringify(this.originalUserProfile)) {
+      console.log("No changes made, not calling api unnecessarily");
+      this.isEditing = false;
+      return; // Exit the function without making an API call
+    }
     this.isEditing = false;
     console.log("new ", this.userProfile)
     this._store.dispatch(updateUserProfile({ user: this.userProfile }))
@@ -129,6 +147,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.selectedImage = e.target.result
       }
       reader.readAsDataURL(file)
+      console.log("sdfewrwew", this.selectedFile)
     }
   }
 
@@ -157,24 +176,24 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this._userService.uploadFileToS3(presignedUrl, this.selectedFile).subscribe((res) => {
 
 
-      const s3FileUrl = presignedUrl.split('?')[0];  
+      const s3FileUrl = presignedUrl.split('?')[0];
       console.log("File URL:", s3FileUrl);
       this.uploadProgress = 'File upload successful! S3 URL: ' + s3FileUrl;
-      this._store.dispatch(updateProfilePicture({ s3FileUrl }));  
+      this._store.dispatch(updateProfilePicture({ s3FileUrl }));
 
 
     }, (error) => {
-    
+
       console.log("error upload", error)
     }
     )
-    this.isPreviewing = false; 
+    this.isPreviewing = false;
   }
 
 
-    /**
-   * Cancels the image selection and resets the preview.
-   */
+  /**
+ * Cancels the image selection and resets the preview.
+ */
   cancelImage(): void {
     this.selectedImage = null; // Reset selected image
     this.isPreviewing = false;
@@ -182,9 +201,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
 
 
-    /**
-   * Cleans up subscriptions when the component is destroyed.
-   */
+  /**
+ * Cleans up subscriptions when the component is destroyed.
+ */
   ngOnDestroy(): void {
     this.datasubscribion.unsubscribe()
     this.subscription.unsubscribe()

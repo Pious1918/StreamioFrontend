@@ -9,6 +9,9 @@ import { AdminUserListComponent } from './pages/admin-user-list/admin-user-list.
 import { AdminAuthgService } from './services/admin-authg.service';
 import { UserSearchResultComponent } from './pages/user-search-result/user-search-result.component';
 import { ErrorComponent } from './pages/error/error.component';
+import { AdminlayoutComponent } from './component/adminlayout/adminlayout.component';
+import { VideoUploadComponent } from './pages/video-upload/video-upload.component';
+import { VideoplayerComponent } from './pages/videoplayer/videoplayer.component';
 
 
 
@@ -49,11 +52,27 @@ export const routes: Routes = [
     { path: 'login', component: UserLoginComponent },
     { path: 'userprofile', component: UserProfileComponent, canActivate: [AuthService] }, // Protect UserProfileComponent
     { path: 'results', component: UserSearchResultComponent, canActivate: [AuthService] },
-
+    { path: 'uploadvideo', component: VideoUploadComponent, canActivate: [AuthService] },
+    {path:'video/:id',component:VideoplayerComponent ,canActivate:[AuthService]},
     {path:'error', component:ErrorComponent, canActivate:[AuthService]},
+   
+
+
+
+
+
+
 
     {path:'adminlogin' , component:AdminLoginComponent},
-    {path:'userlist', component:AdminUserListComponent , canActivate:[AdminAuthgService]},
+    {
+        path:'admin',
+        component:AdminlayoutComponent,
+        canActivate:[AdminAuthgService],
+        children:[
+            {path:'userlist', component:AdminUserListComponent , canActivate:[AdminAuthgService]},
+        ]
+    },
+
    
     // Wildcard route for handling undefined paths
     { path: '**', redirectTo: '/error?message=Page%20Not%20Found' } // Redirect to error page

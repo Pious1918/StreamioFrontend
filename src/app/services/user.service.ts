@@ -1,16 +1,28 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-
+  private searchTermSubject = new BehaviorSubject<string>('');
+  searchTerm$ = this.searchTermSubject.asObservable();
   
   private userServiceUrl = 'http://localhost:5000/user-service'
 
   constructor(private http: HttpClient) { }
+
+
+  updateSearchTerm(term: string) {
+    this.searchTermSubject.next(term);
+  }
+
+  getCurrentSearchTerm() {
+    return this.searchTermSubject.value;
+  }
+
+
 
 
   registerUser(userData: any) {
@@ -58,12 +70,40 @@ export class UserService {
 
 
 
-  uploadFileToS3(url: string, file: File) {
-    return this.http.put(url, file, {
-      headers: { 'Content-Type': file.type },
-    });
-  }
+  // uploadFileToS3(url: string, file: File) {
+  //   return this.http.put(url, file, {
+  //     headers: { 'Content-Type': file.type },
+  //   });
+  // }
 
+
+  uploadFileToS3(url:string , file:File):Observable<number>{
+    const formData :FormData = new FormData()
+    formData.append('file',file , file.name)
+
+    const req = new HttpRequest('PUT',url , file, {
+      reportProgress:true,
+    })
+
+
+    return this.http.request(req).pipe(
+      map(event=>{
+        switch(event.type){
+          case HttpEventType.UploadProgress:
+            const percentDone = Math.round((event.loaded / event.total!) *100)
+            return percentDone
+
+          case HttpEventType.Response:
+            return 100;
+          default:
+            return 0;    
+        }
+      })
+    )
+
+
+
+  }
 
   
 

@@ -37,7 +37,7 @@ export class AdminLoginComponent implements OnDestroy{
       const loginSub =this._adminservice.loginAdmin(adminData).subscribe((res:any)=>{
         console.log("admin Login successfully",res)
         localStorage.setItem('admintoken',res.token)
-        this._router.navigate(['/userlist'])
+        this._router.navigate(['admin/userlist'])
       })
 
       this._subscription.add(loginSub);

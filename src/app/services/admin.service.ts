@@ -23,9 +23,9 @@ export class AdminService {
  }
 
 
- loadAdmindash(){
+ loadAdmindash(page: number = 1, limit: number = 6){
    console.log("Hai from admindash")
-   return this.http.get(`${this.userServiceUrl}/userlist`)
+   return this.http.get(`${this.userServiceUrl}/userlist?page=${page}&limit=${limit}`)
  }
 
 

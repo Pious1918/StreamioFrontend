@@ -9,6 +9,7 @@ import { select, Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { selectUser } from '../../store/user.selector';
 import { FormsModule } from '@angular/forms';
+import { SearchService } from '../../services/search.service';
 
 @Component({
   selector: 'app-user-search-result',
@@ -33,13 +34,18 @@ export class UserSearchResultComponent implements OnInit, OnDestroy  {
     private route: ActivatedRoute, 
     private http: HttpClient , 
     private _userService:UserService,
-    private _store:Store
+    private _store:Store,
+    private _searchService:SearchService
   ) {
 
     this.user$ = this._store.pipe(select(selectUser))
   }
 
   ngOnInit() {
+
+    this.searchQuery = this._userService.getCurrentSearchTerm()
+
+
     const queryParamSub = this.route.queryParams.subscribe(params => {
       this.searchQuery = params['query']; // Extract the search query from the URL
       this.fetchResults();
@@ -57,23 +63,20 @@ export class UserSearchResultComponent implements OnInit, OnDestroy  {
 
     console.log("userer",this.userFollow)
   }
-private userServiceUrl = 'http://localhost:5000/user-service'
 
   fetchResults() {
-
+    const fetchSub = this._searchService.searchUsers(this.searchQuery).subscribe(
+      (response) => {
+        this.users = response;
+        this.loading = false;
+      },
+      (error) => {
+        console.error('Error fetching users', error);
+        this.loading = false;
+      }
+    );
    
-    const fetchSub = this.http
-      .get<any[]>(`http://localhost:5000/user-service/users?name=${this.searchQuery}`)
-      .subscribe(
-        (response) => {
-          this.users = response;
-          this.loading = false;
-        },
-        (error) => {
-          console.error('Error fetching users', error);
-          this.loading = false;
-        }
-      );
+
       this._subscriptions.add(fetchSub);
   }
 

@@ -14,7 +14,7 @@
             <div class="relative">
                 <input  type="text"
                 [(ngModel)]="searchTerm"
-                (keyup.enter)="onSearch()"
+                (keyup)="onSearchTermChange(searchTerm)"
                 placeholder="Search..." class="w-full py-2 pl-4 pr-10 rounded-full border border-gray-300 focus:outline-none focus:border-blue-400">
                 <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500" (click)="onSearch()">
                     <i class="fas fa-search"></i>
