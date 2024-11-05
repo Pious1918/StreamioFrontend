@@ -22,11 +22,13 @@
     "@angular/router": "^18.0.0",
     "@ngrx/effects": "^18.1.0",
     "@ngrx/store": "^18.1.0",
+    "@videojs/http-streaming": "^3.15.0",
     "hls.js": "^1.5.17",
     "rxjs": "~7.8.0",
     "shaka-player": "^4.11.11",
     "sweetalert2": "^11.14.3",
     "tslib": "^2.3.0",
+    "video.js": "^8.19.1",
     "zone.js": "~0.14.3"
   },
   "devDependencies": {
@@ -34,6 +36,7 @@
     "@angular/cli": "^18.0.6",
     "@angular/compiler-cli": "^18.0.0",
     "@types/jasmine": "~5.1.0",
+    "@types/video.js": "^7.3.58",
     "autoprefixer": "^10.4.20",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",

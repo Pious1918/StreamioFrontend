@@ -22,7 +22,9 @@ export class VideoService {
 
 
   getIndividualVideos(movieId:string){
-    return this._http.get<IvideoDocument>(`${this._videoServiceUrl}/video/${movieId}`)
+    // return this._http.get<IvideoDocument>(`${this._videoServiceUrl}/video/${movieId}`)
+    return this._http.get<{ hlsUrl: string }>(`${this._videoServiceUrl}/video/${movieId}/hls`);
+
   }
 
 

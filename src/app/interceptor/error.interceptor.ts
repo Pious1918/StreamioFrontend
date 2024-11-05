@@ -11,17 +11,21 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       let errorMessage = 'An unknown error occurred!';
-      
+
       // Check if the error is from the backend (server-side error)
-      if (error.error instanceof ErrorEvent) {
-        // Client-side error
-        errorMessage = `Client-side error: ${error.error.message}`;
-        console.log("error is ",errorMessage)
-      } else {
-        // Server-side error
-        errorMessage = error.error.message || 'Server-side error: Something went wrong on the backend.';
-      }
-      
+      if (req.responseType === 'blob') {
+        // Skip JSON parsing for Blob responses
+        errorMessage = 'Error loading video file.';
+        console.error("Blob response error:", error);
+      } else if (error.error instanceof ErrorEvent) {
+          // Client-side error
+          errorMessage = `Client-side error: ${error.error.message}`;
+          console.log("error is ", errorMessage)
+        } else {
+          // Server-side error
+          errorMessage = error.error.message || 'Server-side error: Something went wrong on the backend.';
+        }
+
       // Navigate to the error page with the error message as query params
       router.navigate(['/error'], { queryParams: { message: errorMessage } });
 
