@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter, withViewTransitions } from '@angular/router';
+import { provideRouter, withInMemoryScrolling, withViewTransitions } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -14,7 +14,7 @@ import { adminAuthInterceptor } from './interceptor/admin.auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes , withViewTransitions() ),
+    provideRouter(routes , withViewTransitions(),withInMemoryScrolling({ scrollPositionRestoration: "top" }) ),
     provideStore({ user:userReducer}),
     provideState({ name: 'user' , reducer:userReducer }),
     provideHttpClient(withInterceptors([authInterceptor ,errorInterceptor])) ,

@@ -1,18 +1,50 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { HttpErrorResponse } from '@angular/common/http';
 import { throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { RefreshTokenService } from '../services/refresh-token.service';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router); // Using Angular's new inject function
 
+  const refreshtokenservice = inject(RefreshTokenService)
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       let errorMessage = 'An unknown error occurred!';
 
-      // Check if the error is from the backend (server-side error)
+     
+
+       // Check if the error is due to token expiration (403 status)
+       if (error.status === 403) {
+        return refreshtokenservice.refreshToken().pipe(
+          switchMap(() => {
+            // Attempt to get the new token
+            const newAccessToken = localStorage.getItem('authtoken') ?? '';
+            if (!newAccessToken) {
+              // No new token found; navigate to login
+              router.navigate(['/login']);
+              return throwError(() => new Error('Token refresh failed, please log in.'));
+            }
+
+            // Clone the original request with the new token
+            const authReq = req.clone({
+              headers: req.headers.set('Authorization', `Bearer ${newAccessToken}`)
+            });
+            // Retry the original request with the new token
+            return next(authReq);
+          }),
+          catchError(refreshError => {
+            // Handle errors that occur during token refresh
+            console.error('Token refresh failed:', refreshError);
+            router.navigate(['/login']);
+            return throwError(() => new Error('Token refresh failed, please log in.'));
+          })
+        );
+      }
+
+
       if (req.responseType === 'blob') {
         // Skip JSON parsing for Blob responses
         errorMessage = 'Error loading video file.';

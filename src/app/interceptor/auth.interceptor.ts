@@ -14,6 +14,6 @@ if (req.url.includes('amazonaws.com')) {
   const authReq = req.clone({
     headers: req.headers.set('Authorization', `Bearer ${token}`)
   })
-
+console.log("feom interceop",authReq)
   return next(authReq)
 };

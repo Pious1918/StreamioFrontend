@@ -14,6 +14,18 @@
 
 
 <section class="container mx-auto mt-20 p-4 flex flex-col items-center gap-8">
+
+    <section *ngIf="uploadProgress>0">
+    <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+      <div
+        class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+        [style.width.%]="uploadProgress">
+        {{ uploadProgress }}%
+      </div>
+    </div>
+  </section>
+  
+
     <h2 class="text-3xl font-bold mb-6 text-center">Upload Your Video</h2>
     <form [formGroup]="uploadform" (ngSubmit)="onSubmit()" class="space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

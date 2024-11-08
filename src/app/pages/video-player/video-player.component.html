@@ -1,0 +1,38 @@
+
+<app-header></app-header>
+
+<section class="container mx-auto mt-20 p-4 flex flex-col items-center gap-8">
+    <!-- Video container with a max width and fixed aspect ratio -->
+    <div class="video-container glow-effect bg-black w-full max-w-5xl aspect-video">
+        <video id="video-player" class="video-js vjs-custom-theme w-full h-full" muted controls preload="auto"></video>
+    </div>
+    
+
+
+</section>
+
+
+
+
+<section  class="container mx-auto  p-4 flex flex-col items-center gap-8">
+    <!-- Comment posting section -->
+    <form [formGroup]="commentForm" (ngSubmit)="submitComment()" class="w-full max-w-3xl mt-4 p-6 border border-gray-200 rounded-md shadow-md bg-white">
+        <textarea id="comment-input" formControlName="comment" class="w-full p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Write a comment..." rows="4"></textarea>
+        <button type="submit" id="submit-comment" [disabled]="commentForm.invalid" class="mt-4 w-full bg-blue-500 text-white p-3 rounded-md transition duration-200 hover:bg-blue-600 disabled:opacity-50">
+            Post Comment
+        </button>
+    </form>
+
+    <!-- Comments section -->
+    <div class="comments-section w-full max-w-3xl mt-8 p-6 border border-gray-200 rounded-md shadow-md bg-white">
+        <div class="comment p-4 border-b border-gray-300 text-gray-700">
+            <span class="font-semibold">User1:</span> Great video!
+        </div>
+        <div class="comment p-4 border-b border-gray-300 text-gray-700">
+            <span class="font-semibold">User2:</span> Thanks for sharing!
+        </div>
+        <div class="comment p-4 border-b border-gray-300 text-gray-700">
+            <span class="font-semibold">User3:</span> I learned a lot, keep it up!
+        </div>
+    </div>
+</section>

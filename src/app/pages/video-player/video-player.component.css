@@ -1,0 +1,7 @@
+.glow-effect {
+    position: relative;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 60px rgba(255, 165, 0, 0.3), 0 0 100px rgba(255, 69, 0, 0.2);
+    transition: box-shadow 0.3s ease;
+}

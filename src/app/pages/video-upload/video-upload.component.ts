@@ -8,8 +8,9 @@ import { UserService } from '../../services/user.service';
 import { S3Service } from '../../services/s3.service';
 import { VideoService } from '../../services/video.service';
 import Swal from 'sweetalert2'
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Router } from '@angular/router';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-video-upload',
@@ -23,12 +24,12 @@ export class VideoUploadComponent {
   selectedFile: File | null = null;  // to store the actual file for uploading
 
   uploadform!: FormGroup
-  constructor(private _formBuilder: FormBuilder, 
-    private _http: HttpClient, 
-    private _userservice: UserService, 
+  constructor(private _formBuilder: FormBuilder,
+    private _http: HttpClient,
+    private _userservice: UserService,
     private _s3service: S3Service,
-    private _videoService:VideoService,
-    private _router:Router
+    private _videoService: VideoService,
+    private _router: Router
   ) {
 
     this.uploadform = this._formBuilder.group({
@@ -85,87 +86,7 @@ export class VideoUploadComponent {
    * @returns {Promise<void>}
    * @throws will log an error to console the form is invalid
    */
-  // async onSubmit(): Promise<void> {
 
-  //   if (this.uploadform.valid && this.selectedFile) {
-  //     const formData = new FormData();
-
-  //     // Append each form control value to FormData
-  //     formData.append('title', this.uploadform.get('title')?.value);
-  //     formData.append('description', this.uploadform.get('description')?.value);
-  //     formData.append('visibility', this.uploadform.get('visibility')?.value);
-  //     formData.append('payment', this.uploadform.get('payment')?.value);
-  //     formData.append('price', this.uploadform.get('price')?.value); // Add price
-  //     // Append the selected file to FormData
-  //     formData.append('video', this.selectedFile, this.selectedFile.name);
-
-  //     console.log('Submitting form with data:', {
-  //       title: this.uploadform.get('title')?.value,
-  //       description: this.uploadform.get('description')?.value,
-  //       visibility: this.uploadform.get('visibility')?.value,
-  //       payment: this.uploadform.get('payment')?.value,
-  //       fileName: this.selectedFile.name,
-  //       fileType: this.selectedFile.type
-  //     });
-
-  //     const fileName = this.selectedFile.name
-  //     const fileType = this.selectedFile.type
-
-
-
-  //     ///generating presigned url 
-  //     const res = await this._s3service.generateVideoPresignedurl(fileName, fileType).toPromise();
-  //     if (res && res.presignedUrl) {
-  //       const presignedUrl = res.presignedUrl;
-  //       console.log("Presigned URL:", presignedUrl);
-
-  //       //uploading to s3 bucket using presigned url
-  //       await this._userservice.uploadFileToS3(presignedUrl, this.selectedFile).subscribe((res) => {
-
-
-  //         const s3FileUrl = presignedUrl.split('?')[0];
-  //         console.log("File URL:", s3FileUrl);
-
-  //         const backendData = {
-  //           title: this.uploadform.get('title')?.value,
-  //           description: this.uploadform.get('description')?.value,
-  //           visibility: this.uploadform.get('visibility')?.value,
-  //           payment: this.uploadform.get('payment')?.value,
-  //           price: this.uploadform.get('price')?.value,  // Include price
-  //           fileUrl: s3FileUrl
-  //         }
-
-
-  //          this._videoService.saveVideoData(backendData).subscribe({
-  //           next:()=>console.log("data saved successfully"),
-  //           error:(error)=>console.error("error saving data")
-
-  //         })
-
-  //         this.showsuccess()
-
-  //       }, (error) => {
-
-  //         console.log("error upload", error)
-  //       }
-  //       )
-
-  //     } else {
-  //       console.error("Failed to get presigned URL");
-  //     }
-
-
-
-
-
-
-
-
-
-  //   } else {
-  //     console.error('Form is invalid or file not selected');
-  //   }
-  // }
   async onSubmit(): Promise<void> {
     if (this.uploadform.valid && this.selectedFile) {
       const formData = new FormData();
@@ -176,13 +97,13 @@ export class VideoUploadComponent {
       formData.append('visibility', this.uploadform.get('visibility')?.value);
       formData.append('payment', this.uploadform.get('payment')?.value);
       formData.append('price', this.uploadform.get('price')?.value);
-      
+  
       const fileName = this.selectedFile.name;
       const fileType = this.selectedFile.type;
   
       // Generate presigned URL
       const res = await this._s3service.generateVideoPresignedurl(fileName, fileType).toPromise();
-      
+  
       if (res && res.presignedUrl) {
         const presignedUrl = res.presignedUrl;
         console.log("Presigned URL:", presignedUrl);
@@ -196,7 +117,7 @@ export class VideoUploadComponent {
           error: (error) => {
             console.log("Error uploading", error);
           },
-          complete: () => {
+          complete: async () => {
             console.log("Upload completed successfully");
   
             const s3FileUrl = presignedUrl.split('?')[0];
@@ -209,13 +130,18 @@ export class VideoUploadComponent {
               fileUrl: s3FileUrl
             };
   
-            this._videoService.saveVideoData(backendData).subscribe({
-              next: () => console.log("Data saved successfully"),
-              error: (error) => console.error("Error saving data", error)
-            });
-  
-            this.showsuccess();
-            this._router.navigate([''])
+            try {
+              // Convert to HLS and wait for completion
+              const hlsresponse = await lastValueFrom(this._videoService.convertHLS(backendData));
+              console.log("HLS Response:", hlsresponse);
+              
+              // Show success message after both upload and conversion are complete
+              this.showsuccess();
+              
+              // this._router.navigate(['']);
+            } catch (error) {
+              console.error("Error converting to HLS", error);
+            }
           }
         });
       } else {
@@ -226,6 +152,7 @@ export class VideoUploadComponent {
     }
   }
   
+
 
 
   showsuccess() {

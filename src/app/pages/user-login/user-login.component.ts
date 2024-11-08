@@ -88,6 +88,7 @@ export class UserLoginComponent implements OnDestroy {
       const loginSub=this._userservice.loginUser(userdata).subscribe((res: any) => {
         console.log("Login successfully", res)
         localStorage.setItem('authtoken', res.token)
+        localStorage.setItem('userRefreshtoken',res.userRefreshtoken)
         this._router.navigate(['/'])
         this.showsuccess()
       })

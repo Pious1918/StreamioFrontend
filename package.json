@@ -29,6 +29,7 @@
     "sweetalert2": "^11.14.3",
     "tslib": "^2.3.0",
     "video.js": "^8.19.1",
+    "videojs-http-source-selector": "^1.1.6",
     "zone.js": "~0.14.3"
   },
   "devDependencies": {

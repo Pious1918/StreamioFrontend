@@ -36,6 +36,7 @@ export class SidepanelComponent {
 
       if(result.isConfirmed){
         localStorage.removeItem('authtoken')
+        localStorage.removeItem('userRefreshtoken')
         this._router.navigate(['/login'])
         Swal.fire(
           'Logged Out!',

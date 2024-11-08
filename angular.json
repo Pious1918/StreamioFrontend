@@ -22,13 +22,11 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/assets"
-        
             ],
             "styles": [
               "src/styles.css"
             ],
             "scripts": [
-
               "./node_modules/shaka-player/dist/shaka-player.compiled.js"
             ]
           },
@@ -86,6 +84,8 @@
               }
             ],
             "styles": [
+              "node_modules/video.js/dist/video-js.css",
+              "node_modules/videojs-http-source-selector/dist/videojs-http-source-selector.css",
               "src/styles.css"
             ],
             "scripts": []

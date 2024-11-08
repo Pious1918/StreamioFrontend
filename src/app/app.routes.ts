@@ -11,7 +11,7 @@ import { UserSearchResultComponent } from './pages/user-search-result/user-searc
 import { ErrorComponent } from './pages/error/error.component';
 import { AdminlayoutComponent } from './component/adminlayout/adminlayout.component';
 import { VideoUploadComponent } from './pages/video-upload/video-upload.component';
-import { VideoplayerComponent } from './pages/videoplayer/videoplayer.component';
+import { VideoPlayerComponent } from './pages/video-player/video-player.component';
 
 
 
@@ -53,7 +53,8 @@ export const routes: Routes = [
     { path: 'userprofile', component: UserProfileComponent, canActivate: [AuthService] }, // Protect UserProfileComponent
     { path: 'results', component: UserSearchResultComponent, canActivate: [AuthService] },
     { path: 'uploadvideo', component: VideoUploadComponent, canActivate: [AuthService] },
-    {path:'video/:id',component:VideoplayerComponent ,canActivate:[AuthService]},
+    // {path:'video/:id',component:VideoplayerComponent ,canActivate:[AuthService]},
+    {path:'video/:id',component:VideoPlayerComponent ,canActivate:[AuthService]},
     {path:'error', component:ErrorComponent, canActivate:[AuthService]},
    
 
