@@ -1,0 +1,78 @@
+<app-header></app-header>
+<section class="container mx-auto mt-12 p-6 flex flex-col lg:flex-row gap-2"> <!-- Reduced gap -->
+  <!-- Video container -->
+  <div class="w-full max-w-3xl bg-white rounded-lg shadow-lg overflow-hidden lg:flex-1 mx-auto">
+    <div class="relative w-full aspect-video bg-black">
+      <video #videoElement class="w-full h-full object-cover"></video>
+
+      <div
+        class="absolute inset-0 flex items-center justify-center text-white text-xl font-semibold bg-black bg-opacity-50"
+        *ngIf="!isStreaming">
+        Stream Not Started
+      </div>
+
+      <!-- Controls on video -->
+      <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4 z-10">
+        <!-- Centered below the video -->
+        <!-- Audio Icon -->
+        <button (click)="toggleAudio()"
+          class="text-white bg-black p-3 rounded-full hover:bg-opacity-75 aspect-ratio-ellipse">
+          <i [class]="isAudioEnabled ? 'fas fa-microphone' : 'fas fa-microphone-slash'"></i>
+        </button>
+        <!-- Video Icon -->
+        <button (click)="toggleVideo()"
+          class="text-white bg-black p-3 rounded-full hover:bg-opacity-75 aspect-ratio-ellipse">
+          <i [class]="isVideoEnabled ? 'fas fa-video' : 'fas fa-video-slash'"></i>
+        </button>
+        <!-- Start Streaming Icon -->
+        <button (click)="isStreaming ? stopStreaming() : startStreaming()" [class.bg-blue-500]="!isStreaming"
+          [class.bg-red-500]="isStreaming" class="p-3 text-white rounded-full hover:opacity-75 aspect-ratio-ellipse">
+          <i [class]="isStreaming ? 'fas fa-stop' : 'fas fa-play'"></i> <!-- Changed to an icon -->
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Chat Section -->
+  <div class="chat-container bg-white mt-4 lg:mt-0 p-4 rounded-lg shadow-lg w-full lg:w-96 container mx-auto px-4 py-8">
+    <h4 class="text-lg font-semibold border-b pb-2 mb-4 text-right">Live Chat</h4>
+    <div class="chat-messages overflow-y-auto h-64 border rounded p-2 mb-4">
+      <div *ngFor="let message of messages" class="mb-2">
+        <div [ngClass]="{
+          'self-message bg-blue-100 text-right': message.user === 'You',
+          'other-message bg-gray-100 text-left': message.user !== 'You'
+        }" class="p-2 rounded">
+          <strong *ngIf="message.user !== 'You'" class="text-blue-600">{{ message.user }}:</strong>
+          <span>{{ message.text }}</span>
+        </div>
+      </div>
+    </div>
+    <form (submit)="sendMessage()" class="flex space-x-2">
+      <input type="text" [(ngModel)]="messageInput" placeholder="Type a message..."
+        class="flex-1 px-2 py-1 border rounded focus:outline-none focus:ring focus:ring-blue-300" name="messageInput" />
+      <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+        Send
+      </button>
+    </form>
+  </div>
+</section>
+
+
+
+
+
+<!-- Streaming Details Section -->
+<section>
+  <div class="mt-6 w-full max-w-3xl bg-white p-4 rounded-lg shadow-lg mx-auto">
+    <div class="flex items-center justify-start">
+      <img [src]="imageUrl" alt="Streaming image" class="w-20 h-20 object-cover rounded-lg mr-4" />
+      <div>
+        <h3 class="text-lg font-semibold">{{ title }}</h3>
+        <p class="text-gray-600">{{ description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<app-sidepanel></app-sidepanel>

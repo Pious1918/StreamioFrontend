@@ -1,5 +1,4 @@
 <div class="flex justify-start items-center">
-
     <div class="fixed left-0 top-1/2 transform -translate-y-1/2 w-16 bg-white shadow-lg rounded-r-lg">
         <div class="flex flex-col items-center space-y-6 p-4">
             <a routerLink="/" class="text-gray-600 hover:text-blue-600" title="Home">
@@ -8,17 +7,61 @@
             <!-- <a routerLink="/posts" class="text-gray-600 hover:text-blue-600" title="Posts">
                 <i class="fas fa-file-alt fa-lg"></i>
             </a> -->
-            
-            <a routerLink="/userprofile" class="text-gray-600 hover:text-blue-600" title="Dashboard">
+            <!-- <a routerLink="/userprofile" class="text-gray-600 hover:text-blue-600" title="Dashboard">
                 <i class="fas fa-history fa-lg"></i>
+            </a> -->
+
+            <a routerLink="/userprofile" class="text-gray-600 hover:text-blue-600" title="Dashboard">
+                <i class="fas fa-tachometer-alt fa-lg"></i>
             </a>
+
+            <a routerLink="/favorites" class="text-gray-600 hover:text-blue-600" title="Favorites">
+                <i class="fas fa-heart fa-lg text-red-500"></i>
+            </a>
+            
+            <a routerLink="/subscribers" class="text-gray-600 hover:text-blue-600" title="Subscribers">
+                <i class="fas fa-users fa-lg text-green-500"></i>
+            </a>
+            
+            
             <a routerLink="/uploadvideo" class="text-gray-600 hover:text-blue-600" title="Upload">
                 <i class="fas fa-plus fa-lg"></i>
             </a>
+
+            <a routerLink="/livecreation" class="text-gray-600 hover:text-green-600 relative" title="Start Live">
+                <i class="fas fa-play-circle fa-lg text-green-500"></i>
+                <span class="absolute top-0 right-0 h-3 w-3 bg-green-500 rounded-full"></span> <!-- Optional: status indicator -->
+            </a>
+
+            <!-- Live Streaming Icon -->
+            <a routerLink="/livelist" class="text-gray-600 hover:text-blue-600 relative" title="Live Stream">
+                <i class="fas fa-video fa-lg"></i>
+                <!-- Blinking Light -->
+                <span class="absolute top-0 right-0 h-3 w-3 bg-red-500 rounded-full animate-blink"></span>
+            </a>
+
             <a class="text-gray-600 hover:text-red-600" title="Logout" (click)="onLogout()">
                 <i class="fas fa-sign-out-alt fa-lg text-red-500"></i>
             </a>
+
         </div>
     </div>
-
 </div>
+
+<style>
+    @keyframes blink {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0;
+        }
+    }
+
+    .animate-blink {
+        animation: blink 1s infinite;
+    }
+</style>

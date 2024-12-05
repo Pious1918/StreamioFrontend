@@ -44,6 +44,10 @@
                         Password is required.
                     </p>
                 </div>
+                <a href="/password-reset" class="text-blue-500 text-sm">Forget Password?</a>
+                <br><br>
+                <div class="text-red-700 mb-4" *ngIf="errorMessage">{{ errorMessage }}</div>
+
                 <div class="flex items-center justify-between">
                     <button type="submit"
                         class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">

@@ -17,7 +17,8 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
-              "zone.js"
+              "zone.js",
+              "src/polyfills.ts"
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
@@ -86,7 +87,8 @@
             "styles": [
               "node_modules/video.js/dist/video-js.css",
               "node_modules/videojs-http-source-selector/dist/videojs-http-source-selector.css",
-              "src/styles.css"
+              "src/styles.css",
+               "../node_modules/@ctrl/ngx-emoji-mart/picker.css"
             ],
             "scripts": []
           }

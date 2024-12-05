@@ -4,113 +4,144 @@
 
 
 <!-- component -->
-<div class="riva-template p-8 mt-14">
-  <div class="flex flex-wrap -mx-3 mb-5">
-    <div class="w-full max-w-full px-3 mb-6 mx-auto">
-      <div
-        class="relative flex-[1_auto] flex flex-col break-words min-w-0 bg-clip-border rounded-[.95rem] bg-white m-5">
+<section>
+  <div class="riva-template p-8 mt-14">
+    <div class="flex flex-wrap -mx-3 mb-5">
+      <div class="w-full max-w-full px-3 mx-auto">
         <div
-          class="relative flex flex-col min-w-0 break-words border border-dashed bg-clip-border rounded-2xl border-stone-200 bg-light/30">
-          <div class="flex-auto block py-8 pt-6 px-9">
-            <div class="overflow-x-auto">
-              <table class="w-full my-0 align-middle text-dark border-neutral-200">
-                <thead class="align-bottom">
-                  <tr
-                    class="grid border-b border-dashed border-black font-semibold text-blue-600 text-[0.95rem] text-secondary-dark"
-                    style="grid-template-columns: 1fr 1fr 1fr;">
-                    <th class="pb-3 text-start">USER</th>
-                    <th class="pb-3 text-center">Subscribers</th>
-                    <th class="pb-3 text-end pr-8">STATUS</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let user of userList" class="grid border-b border-dashed last:border-b-0"
-                    style="grid-template-columns: 1fr 1fr 1fr;">
-                    <!-- USER Column -->
-                    <td class="p-3 pl-0">
-                      <div class="flex flex-col md:flex-row md:items-center md:space-x-2">
-                        <div class="relative inline-block shrink-0 rounded-2xl mb-2 md:mb-0">
-                          <img [src]="user.profilepicture === 'noImage' ? defaultProfilePic : user.profilepicture"
-                            class="w-[50px] h-[50px] inline-block shrink-0 rounded-2xl" alt="">
+          class="relative flex-[1_auto] flex flex-col break-words min-w-0 bg-clip-border rounded-[.95rem] bg-white m-5">
+          <!-- <div
+            class="relative flex flex-col min-w-0 break-words border border-dashed bg-clip-border rounded-2xl border-stone-200 bg-light/30"> -->
+            <div class="flex-auto block py-7 pt-2 px-9">
+
+              <div class="flex-grow mx-4 max-w-xl">
+                <div class="relative">
+                  <!-- <input type="text" [(ngModel)]="searchTerm" (keyup)="onSearchTermChange(searchTerm)"
+                    placeholder="Search..."
+                    class="w-full py-1 pl-4 pr-10 rounded-full border border-gray-300 focus:outline-none focus:border-blue-400">
+                  <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+                    (click)="onSearch()">
+                    <i class="fas fa-search"></i>
+                  </button>
+                  <button *ngIf="searchTerm" class="absolute right-8 top-1/2 transform -translate-y-1/2 text-gray-500"
+                    (click)="clearSearch()">
+                    <i class="fas fa-times"></i> 
+                  </button> -->
+
+                  <div class="search-box">
+                    <input 
+                      type="text" 
+                      placeholder="Search users..." 
+                      (input)="onSearch($event)"
+                      [(ngModel)]="filters.searchTerm"
+                    >
+                    <i class="fas fa-search"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="w-full my-0 align-middle text-dark border-neutral-200">
+                  <thead class="align-bottom">
+                    <tr
+                      class="grid border-b border-dashed border-black font-semibold text-blue-600 text-[0.95rem] text-secondary-dark"
+                      style="grid-template-columns: 1fr 1fr 1fr 1fr;">
+                      <th class="pb-2 text-start">USER</th>
+                      <th class="pb-2 text-center">EMAIL</th>
+                      <th class="pb-2 text-center">Subscribers</th>
+                      <th class="pb-2 text-end pr-8">STATUS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let user of userList" class="grid border-b border-dashed last:border-b-0"
+                      style="grid-template-columns: 1fr 1fr 1fr 1fr;">
+                      <!-- USER Column -->
+                      <td class="p-3 pl-0">
+                        <div class="flex flex-col md:flex-row md:items-center md:space-x-2">
+                          <div class="relative inline-block shrink-0 rounded-2xl mb-2 md:mb-0">
+                            <img [src]="user.profilepicture === 'noImage' ? defaultProfilePic : user.profilepicture"
+                              class="w-[50px] h-[50px] inline-block shrink-0 rounded-2xl" alt="">
+                          </div>
+                          <div class="flex flex-col text-center md:text-left">
+                            <a
+                              class="font-semibold transition-colors duration-200 ease-in-out text-lg/normal text-secondary-inverse hover:text-primary">
+                              {{ user.name }}
+                            </a>
+                          </div>
                         </div>
-                        <div class="flex flex-col text-center md:text-left">
-                          <a
-                            class="font-semibold transition-colors duration-200 ease-in-out text-lg/normal text-secondary-inverse hover:text-primary">
-                            {{ user.name }}
-                          </a>
-                        </div>
-                      </div>
-                    </td>
+                      </td>
+              
+                      <!-- EMAIL Column -->
+                      <td class="p-3 text-center">
+                        <span
+                          class="inline-flex text-sm font-medium text-gray-700 bg-gray-100 px-2 py-1 rounded-md">
+                          {{ user.email }}
+                        </span>
+                      </td>
+              
+                      <!-- Subscribers Column -->
+                      <td class="p-3 text-center">
+                        <span
+                          class="text-center align-baseline inline-flex px-2 py-1 items-center font-semibold text-base text-success bg-success-light rounded-lg">
+                          {{ user.subscribers?.length || 0 }}
+                        </span>
+                      </td>
+              
+                      <!-- STATUS Column -->
+                      <td class="p-3 pr-8 text-end">
+                        <button *ngIf="user.status === 'active'" (click)="toggleUserStatus(user)"
+                          class="inline-block rounded bg-red-500 px-4 py-2 text-xs font-medium text-white shadow transition duration-150 ease-in-out hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300">
+                          Block
+                        </button>
+              
+                        <button *ngIf="user.status === 'blocked'" (click)="toggleUserStatus(user)"
+                          class="inline-block rounded bg-green-500 px-4 py-2 text-xs font-medium text-white shadow transition duration-150 ease-in-out hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300">
+                          Unblock
+                        </button>
+                      </td>
+              
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              
 
-                    <!-- Subscribers Column -->
-                    <td class="p-3 text-center">
-                      <span
-                        class="text-center align-baseline inline-flex px-2 py-1 items-center font-semibold text-base text-success bg-success-light rounded-lg">
-                        {{ user.subscribers?.length || 0 }}
-                      </span>
-                    </td>
-
-                    <!-- STATUS Column -->
-                    <td class="p-3 pr-8 text-end">
-                      <button *ngIf="user.status === 'active'" (click)="toggleUserStatus(user)"
-                        class="inline-block rounded bg-red-500 px-4 py-2 text-xs font-medium text-white shadow transition duration-150 ease-in-out hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300">
-                        Block
-                      </button>
-
-                      <button *ngIf="user.status === 'blocked'" (click)="toggleUserStatus(user)"
-                        class="inline-block rounded bg-green-500 px-4 py-2 text-xs font-medium text-white shadow transition duration-150 ease-in-out hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300">
-                        Unblock
-                      </button>
-                    </td>
-
-                  </tr>
-                </tbody>
-              </table>
-
-             
             </div>
-            
-          </div>
-          <nav aria-label="Page navigation" class="mt-4">
-            <ul class="inline-flex -space-x-px text-sm">
+            <nav aria-label="Page navigation" class="mt-4">
+              <ul class="inline-flex -space-x-px text-sm">
                 <li>
-                    <button (click)="changePage(currentPage - 1)" 
-                            [disabled]="currentPage === 1"
-                            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700">
-                        Previous
-                    </button>
+                  <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1"
+                    class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700">
+                    Previous
+                  </button>
                 </li>
                 <li *ngFor="let page of [].constructor(totalPages); let i = index">
-                    <button (click)="changePage(i + 1)" 
-                            [class]="i + 1 === currentPage ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
-                            class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
-                        {{ i + 1 }}
-                    </button>
+                  <button (click)="changePage(i + 1)"
+                    [class]="i + 1 === currentPage ? 'text-blue-600 bg-blue-50' : 'text-gray-500 bg-white'"
+                    class="flex items-center justify-center px-3 h-8 border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                    {{ i + 1 }}
+                  </button>
                 </li>
                 <li>
-                    <button (click)="changePage(currentPage + 1)" 
-                            [disabled]="currentPage === totalPages"
-                            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700">
-                        Next
-                    </button>
+                  <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages"
+                    class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700">
+                    Next
+                  </button>
                 </li>
-            </ul>
-        </nav>
-        
-        
+              </ul>
+            </nav>
+
+
+          <!-- </div> -->
         </div>
       </div>
-    </div>
 
-    
+
+
+
+    </div>
 
 
   </div>
 
-
-</div>
-
-
-
-
-  
+</section>

@@ -13,6 +13,7 @@ export class S3Service {
 
   private _userServiceUrl = 'http://localhost:5000/user-service'
   private _videoServiceUrl = 'http://localhost:5000/video-service'
+  private _liveServiceUrl = 'http://localhost:5000/live-service'
 
 
 
@@ -24,7 +25,25 @@ export class S3Service {
   }
   
 
+  generates3URL(bucketname:string, fileName:string, fileType:string):Observable<{presignedUrl:string}>{
+    return this._http.post<{presignedUrl:string}>(`${this._userServiceUrl}/generateCommonPresigner`,{bucketname,fileName,fileType})
+  }
 
+
+
+  generatelivePresignedurl(fileName:string , fileType:string):Observable<{presignedUrl:string}> {
+    return this._http.post<{presignedUrl:string}>(`${this._liveServiceUrl}/generate-presigned-url`,{fileName,fileType})
+  }
+  
+
+
+  
+  uploadFileToS33(url: string, file: File) {
+    console.log("at seeee")
+    return this._http.put(url, file, {
+      headers: { 'Content-Type': file.type },
+    });
+  }
 
 
 }

@@ -12,6 +12,21 @@ import { ErrorComponent } from './pages/error/error.component';
 import { AdminlayoutComponent } from './component/adminlayout/adminlayout.component';
 import { VideoUploadComponent } from './pages/video-upload/video-upload.component';
 import { VideoPlayerComponent } from './pages/video-player/video-player.component';
+import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
+import { AdminBannerManagementComponent } from './pages/admin-banner-management/admin-banner-management.component';
+import { AdminBannerListComponent } from './pages/admin-banner-list/admin-banner-list.component';
+import { NewPasswordComponent } from './pages/new-password/new-password.component';
+import { LiveStreamComponent } from './pages/live-stream/live-stream.component';
+import { LiveViewerComponent } from './pages/live-viewer/live-viewer.component';
+import { LiveListComponent } from './pages/live-list/live-list.component';
+import { LiveCreationComponent } from './pages/live-creation/live-creation.component';
+import { OtpPageComponent } from './pages/otp-page/otp-page.component';
+import { VideoplayerComponent } from './pages/videoplayer/videoplayer.component';
+import { UserPrivatevideosComponent } from './pages/user-privatevideos/user-privatevideos.component';
+import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard.component';
+import { UserLikedPageComponent } from './pages/user-liked-page/user-liked-page.component';
+import { LikedVideoplayerComponent } from './pages/liked-videoplayer/liked-videoplayer.component';
+import { UserSubscriberslistComponent } from './pages/user-subscriberslist/user-subscriberslist.component';
 
 
 
@@ -50,11 +65,23 @@ import { VideoPlayerComponent } from './pages/video-player/video-player.componen
 export const routes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthService] }, // Protect HomeComponent
     { path: 'login', component: UserLoginComponent },
+    { path: 'password-reset', component: PasswordResetComponent },
+    { path: 'otp', component: OtpPageComponent },
+    { path: 'newpass', component: NewPasswordComponent },
     { path: 'userprofile', component: UserProfileComponent, canActivate: [AuthService] }, // Protect UserProfileComponent
+    { path: 'privatevideos', component: UserPrivatevideosComponent, canActivate: [AuthService] }, // Protect UserProfileComponent
     { path: 'results', component: UserSearchResultComponent, canActivate: [AuthService] },
     { path: 'uploadvideo', component: VideoUploadComponent, canActivate: [AuthService] },
+    { path: 'live', component: LiveStreamComponent, canActivate: [AuthService] },
+    { path: 'livecreation', component: LiveCreationComponent, canActivate: [AuthService] },
+    { path: 'viewer/:roomid', component: LiveViewerComponent, canActivate: [AuthService] },
+    { path: 'livelist', component: LiveListComponent, canActivate: [AuthService] },
     // {path:'video/:id',component:VideoplayerComponent ,canActivate:[AuthService]},
-    {path:'video/:id',component:VideoPlayerComponent ,canActivate:[AuthService]},
+    // {path:'video/:id',component:VideoPlayerComponent ,canActivate:[AuthService]},
+    {path:'video/:id',component:VideoplayerComponent ,canActivate:[AuthService]},
+    {path:'likedvideo/:id',component:LikedVideoplayerComponent ,canActivate:[AuthService]},
+    {path:'subscribers',component:UserSubscriberslistComponent ,canActivate:[AuthService]},
+    {path:'favorites',component:UserLikedPageComponent ,canActivate:[AuthService]},
     {path:'error', component:ErrorComponent, canActivate:[AuthService]},
    
 
@@ -71,6 +98,9 @@ export const routes: Routes = [
         canActivate:[AdminAuthgService],
         children:[
             {path:'userlist', component:AdminUserListComponent , canActivate:[AdminAuthgService]},
+            {path:'addbanner', component:AdminBannerManagementComponent , canActivate:[AdminAuthgService]},
+            {path:'banner', component:AdminBannerListComponent , canActivate:[AdminAuthgService]},
+            {path:'admindash', component:AdminDashboardComponent , canActivate:[AdminAuthgService]},
         ]
     },
 

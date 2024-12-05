@@ -1,0 +1,59 @@
+<app-header></app-header>
+
+<section class="container mx-auto mt-5 p-6 flex flex-col items-center gap-4">
+
+</section>
+
+<section class="container mx-auto mt-20">
+    <!-- Sticky Total Liked Videos -->
+    <div class="sticky top-10 bg-white dark:bg-gray-800 p-4 shadow-md rounded-lg w-full md:w-3/4 mx-auto">
+        <div class="flex justify-between items-center">
+            <div>
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">Liked Videos</h2>
+                <p class="text-gray-600 dark:text-gray-300 mt-2">
+                    Total Liked Videos: <span class="font-bold">{{ likedVideos.length }}</span>
+                </p>
+            </div>
+            <!-- Theme Toggle -->
+            <!-- <button 
+                (click)="toggleTheme()"
+                class="p-2 rounded-md bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-100 transition">
+                Toggle Theme
+            </button> -->
+        </div>
+    </div>
+</section>
+
+<!-- Liked Videos Section -->
+<section class="container mx-auto mt-10">
+    <div class="w-full md:w-3/4 mx-auto p-3">
+        <!-- Video Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div *ngFor="let video of likedVideos" 
+                class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                <a (click)="onMovieClick(video.videoId)" class="block">
+                    <img [src]="video.videoDetails.thumbnail" 
+                        [alt]="video.videoDetails.title" 
+                        class="w-full h-40 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-md font-semibold text-gray-800 dark:text-gray-100 truncate">
+                            {{ video.videoDetails.title }}
+                        </h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-3">
+                            {{ video.videoDetails.description }}
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+<app-sidepanel></app-sidepanel>

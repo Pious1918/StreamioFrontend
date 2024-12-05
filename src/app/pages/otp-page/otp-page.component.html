@@ -1,0 +1,42 @@
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="w-full max-w-md p-8 bg-white border border-gray-300 rounded-lg shadow-lg">
+        <!-- Logo Placeholder -->
+        <div class="flex justify-center mb-4">
+            <img src="assets/logored.png" alt="Logo" class="w-20 h-20">
+        </div>
+        <h2 class="mb-4 text-2xl font-semibold text-center text-gray-700" *ngIf="otpGenerated">Enter Your OTP</h2>
+
+
+        <!-- OTP Input Form -->
+        <form (ngSubmit)="onOtpSubmit()" [formGroup]="otpForm">
+            <div class="mb-4">
+                <input type="text" id="otp" maxlength="6" formControlName="otp"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-md text-left focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="Enter your OTP" required>
+            </div>
+            <!-- Response Message -->
+            <div class="text-red-500 text-sm mt-2" *ngIf="responsemsg">
+                {{ responsemsg }}
+            </div>
+            <!-- Timer Display -->
+            <div *ngIf="!showResendButton" class="mb-4 text-center text-sm text-gray-500">
+                <!-- Time remaining: {{ timer | date:'mm:ss':'UTC' }} -->
+                Time remaining: {{ formatTime(timer) }}
+
+                <!-- <h1>{{timer}}</h1> -->
+            </div>
+
+            <!-- Resend OTP Button -->
+            <button *ngIf="showResendButton" type="button" (click)="resendOtp()"
+                class="w-full px-4 py-2 text-white bg-orange-500 rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400">
+                Resend OTP
+            </button>
+
+            <button type="submit"
+                class="w-full px-4 py-2 mt-4 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                Verify OTP
+            </button>
+        </form>
+
+    </div>
+</div>

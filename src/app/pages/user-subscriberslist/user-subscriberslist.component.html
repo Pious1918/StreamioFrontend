@@ -1,0 +1,92 @@
+<app-header></app-header>
+
+
+
+
+
+<section class="container mx-auto mt-20 p-4 flex flex-col items-center gap-8">
+
+    <div class="bg-white shadow-lg rounded-lg w-full max-w-4xl mx-auto mt-8">
+        <!-- Headline Toggle -->
+        <div class="flex justify-around items-center border-b">
+          <button
+            (click)="toggleView('subscribers')"
+            [class.text-blue-500]="activeTab === 'subscribers'"
+            [class.border-blue-500]="activeTab === 'subscribers'"
+            class="flex-1 text-center py-4 text-lg font-semibold border-b-4 border-transparent transition-colors focus:outline-none"
+          >
+            Subscribers({{subscribers.length}})
+          </button>
+          <button
+            (click)="toggleView('following')"
+            [class.text-green-500]="activeTab === 'following'"
+            [class.border-green-500]="activeTab === 'following'"
+            class="flex-1 text-center py-4 text-lg font-semibold border-b-4 border-transparent transition-colors focus:outline-none"
+          >
+            Following({{following.length}})
+          </button>
+        </div>
+      
+        <!-- Indicator -->
+        <div
+          [ngClass]="{ 'bg-blue-500': activeTab === 'subscribers', 'bg-green-500': activeTab === 'following' }"
+          class="h-1 w-1/2 transition-all duration-300"
+          [style.transform]="activeTab === 'subscribers' ? 'translateX(0)' : 'translateX(100%)'"
+        ></div>
+      
+        <!-- Table Content -->
+        <div class="p-4">
+          <div *ngIf="activeTab === 'subscribers'" class="table-container">
+            <h2 class="text-xl font-bold text-center mb-4 text-blue-500">Subscribers</h2>
+            <table class="w-full border-collapse bg-gray-50">
+              <thead>
+                <tr class="bg-blue-200 text-blue-900">
+                  <th class="py-2 px-4 border">Name</th>
+                  <th class="py-2 px-4 border">Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let subscriber of subscribers">
+                  <td class="py-2 px-4 border">{{ subscriber.name }}</td>
+                  <td class="py-2 px-4 border">{{ subscriber.email }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+      
+          <div *ngIf="activeTab === 'following'" class="table-container">
+            <h2 class="text-xl font-bold text-center mb-4 text-green-500">Following </h2>
+            <table class="w-full border-collapse bg-gray-50">
+              <thead>
+                <tr class="bg-green-200 text-green-900">
+                  <th class="py-2 px-4 border">Name</th>
+                  <th class="py-2 px-4 border">Email</th>
+                  <th class="py-2 px-4 border">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let followee of following; let i = index">
+                  <td class="py-2 px-4 border">{{ followee.name }}</td>
+                  <td class="py-2 px-4 border">{{ followee.email }}</td>
+                  <td class="py-2 px-4 border text-center">
+                    <button 
+                      class="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600 text-center"
+                      (click)="unsubscribe(i, followee._id)">
+                      Unsubscribe
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+        </div>
+      </div>
+      
+   
+</section>
+
+
+
+
+<app-sidepanel></app-sidepanel>

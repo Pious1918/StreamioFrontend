@@ -12,7 +12,7 @@ import { UserService } from '../../../services/user.service';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [SidepanelComponent, CommonModule, FormsModule],
+  imports: [ CommonModule, FormsModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })

@@ -10,6 +10,9 @@ import { interval, Observable, Subscription } from 'rxjs';
 import { selectUser } from '../../store/user.selector';
 import { HttpClient } from '@angular/common/http';
 import { VideoService } from '../../services/video.service';
+import { IvideoDocument } from '../user-home/home.component';
+import { RelativetimePipe } from '../../shared/pipes/relativetime.pipe';
+import { Router, RouterModule } from '@angular/router';
 
 
 
@@ -20,11 +23,18 @@ import { VideoService } from '../../services/video.service';
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [HeaderComponent, SidepanelComponent, CommonModule, FormsModule],
+  imports: [HeaderComponent, SidepanelComponent, CommonModule, FormsModule, RouterModule],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.css'
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
+
+
+
+
+  allvideos: any[] = [];
+  privatevideos: any[] = [];
+  watchlatervideos: any[] = [];
 
   isProfileVisible = false;
   isEditing = false;
@@ -47,12 +57,19 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     private _userService: UserService,
     private _store: Store,
     private _http: HttpClient,
-    private _videoService: VideoService
+    private _videoService: VideoService,
+    private router: Router
   ) {
 
     this.user$ = this._store.pipe(select(selectUser));
   }
   userId: string = ''
+
+  originalVideo: any = {};
+
+  selectedVideo: any = {}; // Store the selected video for editing
+  isModalOpen: boolean = false; // Control modal visibility
+
 
   ngOnInit(): void {
     this._store.dispatch(loadUserProfile());
@@ -75,22 +92,115 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
     });
 
+    this.uploadedVideos()
 
-
-    // this.uploadedVideos()
 
 
 
   }
 
 
+  ngAfterViewInit(): void {
 
-  // async uploadedVideos() {
 
-  //   await this._videoService.getUploadedVideos().subscribe((res)=>{
-  //     console.log("response is fromm videoss",res)
-  //   })
-  // }
+    this.privatevideosOnly()
+    this.fetchwaterLaterVideos()
+
+  }
+
+  activeTab = 'uploaded';  // Default active tab
+
+  // Function to set the active tab
+  setActiveTab(tabName: string) {
+    this.activeTab = tabName;
+  }
+
+
+
+  async uploadedVideos() {
+
+    this._videoService.getUploadedVideos().subscribe((res: any) => {
+      console.log("response is fromm uploaded videoss", res)
+      this.allvideos = res
+    })
+  }
+
+
+  privatevideosOnly() {
+
+    this._videoService.getPrivatevideos().subscribe((res: any) => {
+      console.log("res @ privatevideosonly ", res)
+      this.privatevideos = res.videos
+
+    })
+  }
+
+
+  fetchwaterLaterVideos() {
+    this._videoService.getwatchlater().subscribe((res: any) => {
+      console.log("response form watch later", res)
+
+      this.watchlatervideos = res.videos
+
+    })
+  }
+
+
+  openModal(movie: any) {
+    this.selectedVideo = { ...movie }; // Make a shallow copy
+    this.originalVideo = { ...movie }; // Store the original values for comparison
+    this.isModalOpen = true;
+  }
+
+
+  closeModal() {
+    this.isModalOpen = false; // Close the modal
+  }
+
+  // Update video details after editing
+  updateVideo() {
+    // Create an object to hold only the changed properties
+    const updatedFields: any = {};
+
+    // Check if any of the fields have changed
+    if (this.selectedVideo.title !== this.originalVideo.title) {
+      updatedFields.title = this.selectedVideo.title;
+    }
+    if (this.selectedVideo.description !== this.originalVideo.description) {
+      updatedFields.description = this.selectedVideo.description;
+    }
+    if (this.selectedVideo.visibility !== this.originalVideo.visibility) {
+      updatedFields.visibility = this.selectedVideo.visibility;
+    }
+
+    // If any fields are updated, call the backend service
+    if (Object.keys(updatedFields).length > 0) {
+      console.log('Updated fields:', updatedFields);
+
+
+      // Check if visibility changed and update the privatevideos array accordingly
+      if (this.originalVideo.visibility === 'private' && this.selectedVideo.visibility === 'public') {
+        // Remove from privatevideos array
+        const index = this.privatevideos.findIndex(video => video._id === this.selectedVideo._id);
+        if (index !== -1) {
+          this.privatevideos.splice(index, 1);
+        }
+      } else if (this.originalVideo.visibility === 'public' && this.selectedVideo.visibility === 'private') {
+        // Add to privatevideos array
+        this.privatevideos.push(this.selectedVideo);
+      }
+
+
+
+      // Call the service to update the video details
+      this._userService.updateVideo(this.selectedVideo._id, updatedFields).subscribe((response: any) => {
+        console.log('Video updated', response);
+        this.isModalOpen = false; // Close the modal after saving
+      });
+    } else {
+      console.log('No changes detected, no update made.');
+    }
+  }
 
 
 
@@ -201,6 +311,16 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
 
 
+  onMovieClick(movieId: string): void {
+
+    console.log("id is ", movieId)
+    this.router.navigate(['/video', movieId])
+
+
+
+  }
+
+
   /**
  * Cleans up subscriptions when the component is destroyed.
  */
@@ -212,5 +332,16 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       this.subscription.unsubscribe();
     }
   }
+
+
+  // TrackBy function for optimization
+  trackById(index: number, item: any): any {
+    return item._id;
+  }
+  trackByMovieId(index: number, movie: any): string {
+    return movie._id;
+  }
+
+
 
 }

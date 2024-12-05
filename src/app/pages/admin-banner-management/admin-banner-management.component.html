@@ -1,0 +1,53 @@
+<section class="riva-template p-8 mt-14">
+    <div class="container mx-auto p-4">
+      <!-- Banner Management Header -->
+      <div class="mb-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold">Banner List</h1>
+        <a routerLink="/admin/banner">
+          <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
+           Go Back
+          </button>
+        </a>
+      </div>
+      
+      <!-- Banner Form -->
+      <div class="grid gap-4">
+        <!-- Single Banner Item -->
+        <div class="bg-white shadow rounded p-4">
+       
+          <form (ngSubmit)="onSave()" [formGroup]="bannerForm">
+            <!-- Image Upload -->
+            <div class="mb-4">
+              <label class="block text-gray-700 font-medium mb-1">Upload Image:</label>
+              <input type="file" accept="image/*" (change)="onImageSelected($event)" class="block w-full text-sm text-gray-900 border border-gray-300 rounded cursor-pointer bg-gray-50 focus:outline-none">
+              
+              <!-- Image Preview -->
+              <div class="mt-4" *ngIf="imagePreview">
+                <img [src]="imagePreview" class="w-50 max-h-32 object-cover rounded shadow-md"  alt="Preview Image">
+              </div>
+            </div>
+            
+  
+            <!-- Title Input -->
+            <div class="mb-4">
+              <label class="block text-gray-700 font-medium mb-1">Title:</label>
+              <input type="text" formControlName="title" placeholder="Enter banner title" class="w-full border-gray-300 border rounded p-2 focus:ring focus:ring-blue-200">
+            </div>
+  
+            <!-- Description Textarea -->
+            <div class="mb-4">
+              <label class="block text-gray-700 font-medium mb-1">Description:</label>
+              <textarea placeholder="Enter banner description" formControlName="description" rows="3" class="w-full border-gray-300 border rounded p-2 focus:ring focus:ring-blue-200"></textarea>
+            </div>
+  
+            <!-- Action Buttons -->
+            <div class="flex justify-end space-x-2">
+              <button type="button" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded">Delete</button>
+              <button type="submit" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  

@@ -1,0 +1,8 @@
+/* Custom class to maintain an elliptical aspect ratio */
+.aspect-ratio-ellipse {
+    width: 50px; /* Adjust width as needed */
+    height: 30px; /* Adjust height for elliptical effect */
+    padding: 0; /* Remove padding to avoid interfering with width/height */
+    border-radius: 50% / 30%; /* Adjust this ratio for desired ellipse shape */
+  }
+  

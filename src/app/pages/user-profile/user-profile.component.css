@@ -9,3 +9,14 @@
     max-height: 600px; /* Large enough to accommodate the content */
     opacity: 1;
 }
+
+.tab-item {
+    border-bottom: 4px solid transparent; /* Default border */
+    transition: all 0.3s ease;
+}
+
+.tab-item.active {
+    border-bottom: 4px solid #3490dc; /* Active tab border color */
+}
+
+

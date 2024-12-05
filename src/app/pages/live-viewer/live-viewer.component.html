@@ -1,0 +1,46 @@
+<app-header></app-header>
+
+
+<section class="container mx-auto mt-5 p-6 flex flex-col items-center gap-4">
+
+</section>
+
+
+
+<section class="container mx-auto mt-10 p-6 flex flex-col lg:flex-row gap-8">
+  <!-- Video Player Section -->
+  <div class="flex-1 flex flex-col items-center container mx-auto px-4 py-8">
+    <div class="relative w-full max-w-screen-lg rounded-lg shadow-lg overflow-hidden bg-black">
+      <video #videoElement controls autoplay class="rounded-lg outline-none"></video>
+      <!-- Custom Controls (if needed) -->
+      <div class="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/50 via-transparent to-transparent">
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Chat Section -->
+  <div class="chat-container bg-white mt-10 p-4 rounded-lg shadow-lg w-full lg:w-96 container mx-auto px-4 py-8">
+    <h4 class="text-lg font-semibold border-b pb-2 mb-4 text-right">Live Chat</h4>
+    <div class="chat-messages overflow-y-auto h-64 border rounded p-2 mb-4">
+      <div *ngFor="let message of messages" class="mb-2">
+        <div [ngClass]="{
+            'self-message bg-blue-100 text-right': message.user === 'You',
+            'other-message bg-gray-100 text-left': message.user !== 'You'
+          }" class="p-2 rounded">
+          <strong *ngIf="message.user !== 'You'" class="text-blue-600">{{ message.user }}:</strong>
+          <span>{{ message.text }}</span>
+        </div>
+      </div>
+    </div>
+    <form (submit)="sendMessage()" class="flex space-x-2">
+      <input type="text" [(ngModel)]="messageInput" placeholder="Type a message..."
+        class="flex-1 px-2 py-1 border rounded focus:outline-none focus:ring focus:ring-blue-300" name="messageInput" />
+      <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+        Send
+      </button>
+    </form>
+  </div>
+</section>
+
+<app-sidepanel></app-sidepanel>
+

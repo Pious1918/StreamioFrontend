@@ -1,0 +1,41 @@
+<section class="riva-banner-list p-8 mt-14">
+    <!-- Main Content -->
+    <div class="container mx-auto mt-6 px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Total Users -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h2 class="text-lg font-semibold text-gray-700">Total Users</h2>
+          <p class="text-3xl font-bold text-blue-600 mt-2">{{count}}</p>
+  
+          <!-- Active Users -->
+          <div class="mt-4 flex items-center">
+            <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+            <span class="text-gray-700 font-medium">Active Users:</span>
+            <span class="ml-2 text-gray-800 font-semibold">{{activeCount}}</span>
+          </div>
+  
+          <!-- Blocked Users -->
+          <div class="mt-2 flex items-center">
+            <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+            <span class="text-gray-700 font-medium">Blocked Users:</span>
+            <span class="ml-2 text-gray-800 font-semibold">{{blockedCount}}</span>
+          </div>
+        </div>
+  
+        <!-- Videos List -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <h2 class="text-lg font-semibold text-gray-700">Top 5 Videos</h2>
+          <ul class="mt-4">
+            @for (movie of allvideos; track movie._id) {
+
+            <li class="flex justify-between py-2 border-b border-gray-200">
+              <span>{{movie.title}}</span>
+              <span class="text-blue-600">{{ movie.views }} views</span>
+            </li>
+        }
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+  

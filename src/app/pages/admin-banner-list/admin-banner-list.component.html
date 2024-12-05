@@ -1,0 +1,53 @@
+<section class="riva-banner-list p-8 mt-14">
+    <div class="container mx-auto p-4">
+      <!-- Banner List Header -->
+      <div class="mb-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold">Banner List</h1>
+        <a routerLink="/admin/addbanner">
+          <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
+            Add New Banner
+          </button>
+        </a>
+      </div>
+      
+  
+      <!-- Banner Items Grid -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full table-auto border-collapse" *ngIf="banners && banners.length > 0; else noBanners">
+          <thead class="text-blue-500">
+            <tr>
+              <th class="border-dotted border-2 px-4 py-2">Banner Image</th>
+              <th class="border-dotted border-2 px-4 py-2">Title</th>
+              <th class="border-dotted border-2 px-4 py-2">Description</th>
+              <th class="border-dotted border-2 px-4 py-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let banner of banners">
+              <td class="border-dotted border-2 px-4 py-2 text-center">
+                <img [src]="banner.image" alt="Banner Image" class="w-24 h-12 object-cover mx-auto rounded">
+              </td>
+              <td class="border-dotted border-2 px-4 py-2">{{ banner.title }}</td>
+              <td class="border-dotted border-2 px-4 py-2">{{ banner.description }}</td>
+              <td class="border-dotted border-2 px-4 py-2 text-center">
+                <div class="flex flex-col md:flex-row justify-center gap-2">
+                  <!-- <button type="button" class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded w-24 md:w-auto">Edit</button> -->
+                  <button type="button" (click)="deleteBanner(banner._id, banner.image)" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded w-24 md:w-auto">Delete</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      
+        <!-- Template to show when no banners are available -->
+        <ng-template #noBanners>
+          <div class="text-center text-gray-500 py-4">
+            No banners available.
+          </div>
+        </ng-template>
+      </div>
+      
+      
+    </div>
+  </section>
+  

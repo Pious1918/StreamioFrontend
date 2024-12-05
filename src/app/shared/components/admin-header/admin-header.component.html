@@ -6,7 +6,7 @@
   <nav class="shadow">
     <div class="flex justify-between items-center py-6 px-10 container mx-auto">
       <div>
-        <a href="admin/userlist" class="flex items-center space-x-3 rtl:space-x-reverse">
+        <a href="admin/admindash" class="flex items-center space-x-3 rtl:space-x-reverse">
           <img src="assets/logoyellow.png" class="h-12" alt="Streamio Logo" />
           <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Admin Panel</span>
         </a>      </div>
@@ -21,10 +21,10 @@
 
         <div class="flex items-center">
           <ul class="sm:flex space-x-4 hidden items-center">
-            <li><a routerLink="admin/userlist" class="text-gray-700 hover:text-indigo-600 text-md cursor-pointer">Home</a></li>
-            <li><a routerLink="#" class="text-gray-700 hover:text-indigo-600 text-md cursor-pointer">About</a></li>
-            <li><a routerLink="#" class="text-gray-700 hover:text-indigo-600 text-md cursor-pointer">Services</a></li>
-            <li><a routerLink="#" class="text-gray-700 hover:text-indigo-600 text-md cursor-pointer">Products</a></li>
+            <li><a routerLink="/admin/admindash" class="text-gray-700 hover:text-indigo-600 text-md cursor-pointer">Dashboard</a></li>
+            <li><a routerLink="/admin/userlist" class="text-gray-700 hover:text-indigo-600 text-md cursor-pointer">User List</a></li>
+            <li><a routerLink="/admin/banner" class="text-gray-700 hover:text-indigo-600 text-md cursor-pointer">Banner Management</a></li>
+         
             <li><a (click)="onLogout()" class="text-white bg-red-600 px-4 py-2 rounded-md hover:bg-red-700 text-md cursor-pointer">Logout</a></li>
           </ul>
 
@@ -36,8 +36,8 @@
     <!-- Mobile Menu -->
     <div [ngClass]="{'hidden': !isNavbarOpen, 'block': isNavbarOpen}" class="sm:hidden">
       <ul class="flex flex-col space-y-2 py-4 px-6 bg-gray-50">
-        <li><a routerLink="admin/userlist" class="text-gray-700 hover:text-indigo-600 cursor-pointer">Home</a></li>
-        <li><a routerLink="#" class="text-gray-700 hover:text-indigo-600 cursor-pointer">About</a></li>
+        <li><a routerLink="/admin/userlist" class="text-gray-700 hover:text-indigo-600 cursor-pointer">Home</a></li>
+        <li><a routerLink="/admin/banner" class="text-gray-700 hover:text-indigo-600 cursor-pointer">Banner Management</a></li>
         <li><a routerLink="#" class="text-gray-700 hover:text-indigo-600 cursor-pointer">Services</a></li>
         <li><a routerLink="#" class="text-gray-700 hover:text-indigo-600 cursor-pointer">Products</a></li>
         <li><a (click)="onLogout()" class="text-white bg-red-600 px-4 py-2 rounded-md hover:bg-red-700 text-md cursor-pointer">Logout</a></li>

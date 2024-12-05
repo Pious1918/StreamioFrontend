@@ -1,0 +1,51 @@
+<app-header></app-header>
+
+
+<div class="container p-6 bg-gray-100 min-h-screen flex justify-center items-center">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
+      <h2 class="text-2xl font-bold mb-4">Start Live</h2>
+  
+      <!-- Form Start -->
+      <form [formGroup]="liveform" (ngSubmit)="submitForm()">
+        <!-- Image Input -->
+        <div class="mb-4">
+          <label for="image" class="block text-gray-700 font-semibold mb-1">Image</label>
+          <input type="file" id="image" (change)="onImageSelect($event)" formControlName="image" accept="image/*"
+                 class="w-full px-4 py-2 border rounded focus:outline-none">
+        </div>
+  
+        <!-- Image Preview -->
+        <div *ngIf="imagePreview" class="mb-4">
+          <label class="block text-gray-700 font-semibold mb-1">Image Preview</label>
+          <img [src]="imagePreview" alt="Selected Image" class="w-50 h-50 rounded border">
+        </div>
+  
+        <!-- Title Input -->
+        <div class="mb-4">
+          <label for="title" class="block text-gray-700 font-semibold mb-1">Title</label>
+          <input type="text" id="title" [(ngModel)]="title" placeholder="Enter title" formControlName="title"
+                 class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+  
+        <!-- Description Input -->
+        <div class="mb-4">
+          <label for="description" class="block text-gray-700 font-semibold mb-1">Description</label>
+          <textarea id="description" [(ngModel)]="description" rows="4" placeholder="Enter description" formControlName="description"
+                    class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        </div>
+  
+        <!-- Submit Button -->
+        <button type="submit"
+                class="w-full py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
+          Start Live
+        </button>
+      </form>
+      <!-- Form End -->
+    </div>
+  </div>
+  
+  
+
+
+
+  <app-sidepanel></app-sidepanel>

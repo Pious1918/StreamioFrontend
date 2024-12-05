@@ -1,11 +1,14 @@
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { HeaderComponent } from '../../shared/components/user-header/header.component';
 import { SidepanelComponent } from '../../shared/components/user-sidepanel/sidepanel.component';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VideoService } from '../../services/video.service';
 import { RelativetimePipe } from '../../shared/pipes/relativetime.pipe';
+import { HttpClient } from '@angular/common/http';
+import { UserService } from '../../services/user.service';
+import Swal from 'sweetalert2';
 
 interface Movie {
   id: number;
@@ -13,6 +16,17 @@ interface Movie {
   views: string;
   timeAgo: string;
   imageUrl: string;
+}
+
+interface banner{
+  title:string,
+  description:string,
+  image:string
+}
+interface thumb{
+  title:string,
+  description:string,
+  image:string
 }
 
 export enum Visibility {
@@ -24,17 +38,19 @@ export enum PaidStatus {
   PAID = "paid",
   UNPAID = "unpaid",
 }
-export interface IvideoDocument{
-  _id:string,
-  uploaderId:string,
-  title:string,
-  description:string,
-  likes:number,
-  views:number,
-  createdAt:Date
-  videolink:string,
+export interface IvideoDocument {
+  _id: string,
+  uploaderId: string,
+  title: string,
+  description: string,
+  likes: number,
+  views: number,
+  createdAt: Date
+  videolink: string,
+  thumbnail?:string,
+  category?:string,
   visibility: Visibility; // Updated to use the enum
-  price:number,
+  price: number,
   paid: PaidStatus; // Updated to use the enum
 }
 
@@ -43,32 +59,27 @@ export interface IvideoDocument{
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeaderComponent, SidepanelComponent, CommonModule, FormsModule ,RelativetimePipe, AsyncPipe],
+  imports: [HeaderComponent, SidepanelComponent, CommonModule, FormsModule, RelativetimePipe, RouterModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  items = [
-    { img: 'assets/thumb.jpg', author: 'N S Pious', title: 'New title', topics: 'Video streaming', des: 'Lorem ipsum...' },
-    { img: 'assets/top3.jpg', author: 'N S Pious', title: 'New title', topics: 'Video streaming', des: 'Lorem ipsum...' },
-    { img: 'assets/clark.jpg', author: 'N S Pious', title: 'New title', topics: 'Video streaming', des: 'Lorem ipsum...' }
-  ];
 
-  thumbnails = [
-    { img: 'assets/thumb.jpg', title: 'New Slider', des: 'Description' },
-    { img: 'assets/top3.jpg', title: 'New Slider', des: 'Description' },
-    { img: 'assets/clark.jpg', title: 'New Slider', des: 'Description' }
-  ];
+  items:banner[] = [];
+
+
+  thumbnails:banner[] = [];
 
   timerunning = 3000;
   timeAutonext = 7000;
   runAutorun: any;
   runTimeout: any;
-  constructor(private router: Router , private _videoService:VideoService) {}
+
+  constructor(private router: Router, private _videoService: VideoService, private _http: HttpClient, private _userService:UserService) { }
 
 
 
-  allvideos:IvideoDocument[]=[];
+  allvideos: any[] = [];
 
 
   ngOnInit(): void {
@@ -78,7 +89,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     }, this.timeAutonext);
 
 
-  this.loadVideos()
+    this.loadBanners()
+    this.loadVideos()
   }
 
   ngOnDestroy(): void {
@@ -135,7 +147,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     { title: 'Video 3', description: 'Description 3', source: 'https://streamiovideoupload.s3.eu-north-1.amazonaws.com/3116737-hd_1920_1080_25fps.mp4' },
     // Add more video objects as needed
   ];
-  
+
   goToVideoList() {
     this.router.navigate(['/videos']);
   }
@@ -143,54 +155,115 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 
 
-  movies: Movie[] = [
-    {
-      id: 1,
-      title: 'The Movie|HD Film',
-      views: '2.5k',
-      timeAgo: '2 days ago',
-      imageUrl: 'https://picsum.photos/400/300?random=1'
-    },
-    {
-      id: 2,
-      title: 'The Movie|HD Film',
-      views: '2.5k',
-      timeAgo: '2 days ago',
-      imageUrl: 'https://picsum.photos/400/300?random=2'
-    },
-    {
-      id: 3,
-      title: 'The Movie|HD Film',
-      views: '2.5k',
-      timeAgo: '2 days ago',
-      imageUrl: 'https://picsum.photos/400/300?random=3'
-    },
-    {
-      id: 4,
-      title: 'The Movie|HD Film',
-      views: '2.5k',
-      timeAgo: '2 days ago',
-      imageUrl: 'https://picsum.photos/400/300?random=4'
-    }
-  ];
+ 
 
+  videolink: string[] = []; // Declare the videolink array
 
-
-  loadVideos(){
-    this._videoService.getAllVideos().subscribe((res:IvideoDocument[] )=>{
-      console.log("resss from lod video",res)
-      this.allvideos = res; 
-    })
+  loadVideos() {
+    this._videoService.getAllVideos().subscribe((res: IvideoDocument[]) => {
+      console.log("resss from lod video", res)
+      this.allvideos = res;
+      this.videolink = res.map(video => `https://d3qrczdrpptz8b.cloudfront.net/${video.videolink}`);  // Construct video link URL
+      console.log("Video links:", this.videolink);    })
   }
 
 
 
   onMovieClick(movieId: string): void {
 
-    console.log("id is ",movieId)
-     this.router.navigate(['/video',movieId])
+    console.log("id is ", movieId)
+    this.router.navigate(['/video', movieId])
 
 
 
   }
+
+  private _liveServiceUrl = 'http://localhost:5000/live-service'
+
+
+  startLive() {
+
+    const streamData = { title: 'my live', description: 'streaming alive' }
+    this._http.post(`${this._liveServiceUrl}/livestart`, streamData)
+      .subscribe(res => {
+        console.log("live startedd", res)
+      }, error => {
+        console.error("error in live", error)
+      })
+  }
+
+
+  loadBanners(){
+    
+    this._userService.getBanners().subscribe((res:any)=>{
+      console.log("banner response is ",res)
+
+      this.items=res.getbanner
+      
+      this.thumbnails=res.getbanner
+    })
+  }
+
+
+
+  activeMenu: string | null = null;
+
+toggleMenu(movieId: string, event: Event): void {
+  if (this.activeMenu === movieId) {
+    this.activeMenu = null; // Close the menu
+  } else {
+    this.activeMenu = movieId; // Open the menu
+  }
+}
+
+
+
+saveToWatchLater(movieId: string): void {
+  console.log('Saved to Watch Later:', movieId);
+
+  this._videoService.updateSavewatchlater(movieId).subscribe(
+    (res: any) => {
+      console.log("response from watchlater", res);
+
+      if (res.message === 'Video is already saved to Watch Later') {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'info',
+          title: 'This video is already in your Watch Later list.',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      } else if (res.message === 'Video saved to Watch Later') {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title: 'The video has been successfully saved to your Watch Later list.',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      }
+    },
+    (error) => {
+      console.error('Error:', error);
+      Swal.fire({
+        toast: true,
+        position: 'top',
+        icon: 'error',
+        title: 'Failed to save the video. Please try again later.',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+    }
+  );
+
+  this.activeMenu = null; // Close the menu after saving
+}
+
+
+
 }

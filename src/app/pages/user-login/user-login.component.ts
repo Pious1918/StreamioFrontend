@@ -18,11 +18,11 @@ export class UserLoginComponent implements OnDestroy {
   loginForm!: FormGroup
   registerForm!: FormGroup;
   isLoginActive: boolean = true;
-  data$ = interval(1000)
+  // data$ = interval(1000)
   datasubscribion!: Subscription;
   /**this is store all the subscription */
   private _subscription: Subscription = new Subscription()
-
+  errorMessage!: string
   constructor(private _fb: FormBuilder, private _router: Router, private _userservice: UserService) {
 
 
@@ -44,9 +44,9 @@ export class UserLoginComponent implements OnDestroy {
 
 
 
-    this.datasubscribion = this.data$.subscribe((data) => {
-      console.log("data is", data)
-    })
+    // this.datasubscribion = this.data$.subscribe((data) => {
+    //   console.log("data is", data)
+    // })
   }
 
 
@@ -84,14 +84,35 @@ export class UserLoginComponent implements OnDestroy {
       }
 
       console.log("userdata", userdata)
+      this.errorMessage = ''; // Clear any previous error messages
 
-      const loginSub=this._userservice.loginUser(userdata).subscribe((res: any) => {
-        console.log("Login successfully", res)
-        localStorage.setItem('authtoken', res.token)
-        localStorage.setItem('userRefreshtoken',res.userRefreshtoken)
-        this._router.navigate(['/'])
-        this.showsuccess()
+      // const loginSub=this._userservice.loginUser(userdata).subscribe((res: any) => {
+      //   console.log("Login successfully", res)
+
+      //   localStorage.setItem('authtoken', res.token)
+      //   localStorage.setItem('userRefreshtoken',res.userRefreshtoken)
+      //   this._router.navigate(['/'])
+      //   this.showsuccess()
+      // })
+
+      const loginSub = this._userservice.loginUser(userdata).subscribe({
+        next: (res: any) => {
+          if (res.success) {
+            console.log("Login successfully", res);
+            localStorage.setItem('authtoken', res.token);
+            this._router.navigate(['/']);
+            this.showsuccess(); // Display success message
+          } else {
+            this.errorMessage = res.message
+          }
+        },
+        error: (err: any) => {
+          console.error('Error during login:', err);
+          this.errorMessage = err.error?.message || 'An unexpected error occurred';
+        }
       })
+
+
 
       this._subscription.add(loginSub)
     }
@@ -146,7 +167,7 @@ export class UserLoginComponent implements OnDestroy {
 
 
   ngOnDestroy(): void {
-    this.datasubscribion.unsubscribe()
+    // this.datasubscribion.unsubscribe()
     this._subscription.unsubscribe()
   }
 }

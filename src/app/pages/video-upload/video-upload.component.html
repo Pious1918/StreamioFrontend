@@ -1,30 +1,34 @@
 <app-header></app-header>
 
+
+
+<section class="container mx-auto mt-5 p-6 flex flex-col items-center gap-4">
+
+</section>
+
 <!-- Progress Bar Section -->
 <section *ngIf="uploadProgress>0">
     <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
-      <div
-        class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
-        [style.width.%]="uploadProgress">
-        {{ uploadProgress }}%
-      </div>
+        <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+            [style.width.%]="uploadProgress">
+            {{ uploadProgress }}%
+        </div>
     </div>
-  </section>
-  
+</section>
+
 
 
 <section class="container mx-auto mt-20 p-4 flex flex-col items-center gap-8">
 
     <section *ngIf="uploadProgress>0">
-    <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
-      <div
-        class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
-        [style.width.%]="uploadProgress">
-        {{ uploadProgress }}%
-      </div>
-    </div>
-  </section>
-  
+        <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+            <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                [style.width.%]="uploadProgress">
+                {{ uploadProgress }}%
+            </div>
+        </div>
+    </section>
+
 
     <h2 class="text-3xl font-bold mb-6 text-center">Upload Your Video</h2>
     <form [formGroup]="uploadform" (ngSubmit)="onSubmit()" class="space-y-6">
@@ -32,74 +36,99 @@
             <!-- Title Input -->
             <div class="form-group col-span-1">
                 <label for="title" class="block text-lg font-medium mb-2">Title</label>
-                <input type="text" id="title" name="title" formControlName="title" class="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-red-500" />
-                <p class="text-red-700" *ngIf="uploadform.get('title')?.touched && uploadform.get('title')?.hasError('required')">
+                <input type="text" id="title" name="title" formControlName="title"
+                    class="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-red-500" />
+                <p class="text-red-700"
+                    *ngIf="uploadform.get('title')?.touched && uploadform.get('title')?.hasError('required')">
                     Title is required
                 </p>
             </div>
         </div>
-
+    
         <!-- Description Input Below Title -->
         <div class="form-group col-span-1">
             <label for="description" class="block text-lg font-medium mb-2">Description</label>
-            <textarea id="description" name="description" formControlName="description" class="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-red-500" rows="4"></textarea>
-            <p class="text-red-700" *ngIf="uploadform.get('description')?.invalid && uploadform.get('description')?.touched">
+            <textarea id="description" name="description" formControlName="description"
+                class="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-red-500"
+                rows="4"></textarea>
+            <p class="text-red-700"
+                *ngIf="uploadform.get('description')?.invalid && uploadform.get('description')?.touched">
                 Description is required
             </p>
         </div>
-
+    
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Visibility Selection -->
+            <!-- Category Selection -->
             <div class="form-group">
-                <label for="visibility" class="block text-lg font-medium mb-2">Visibility</label>
-                <select id="visibility" name="visibility" formControlName="visibility" class="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-red-500">
-                    <option value="" disabled>Select Visibility</option>
-                    <option value="public">Public</option>
-                    <option value="private">Private</option>
+                <label for="category" class="block text-lg font-medium mb-2">Category</label>
+                <select id="category" name="category" formControlName="category"
+                    class="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <option value="" disabled>Select Category</option>
+                    <option value="music">Music</option>
+                    <option value="automobile">Automobile</option>
+                    <option value="sports">Sports</option>
+                    <option value="entertainment">Entertainment</option>
+                    <option value="education">Education</option>
+                    <option value="gaming">Gaming</option>
+                    <option value="lifestyle">Lifestyle</option>
+                    <option value="food">Food</option>
+                    <option value="DIY">DIY</option>
+                    <option value="others">Others</option>
                 </select>
             </div>
-
-            <!-- Paid/Unpaid Selection -->
+    
+            <!-- Thumbnail Upload -->
             <div class="form-group">
-                <label class="block text-lg font-medium mb-2">Paid or Unpaid</label>
-                <div class="flex items-center mb-2">
-                    <input type="radio" id="paid" name="payment" value="paid" formControlName="payment" (change)="onPaymentChange()" />
-                    <label for="paid" class="ml-2">Paid</label>
-                </div>
-                <div class="flex items-center">
-                    <input type="radio" id="unpaid" name="payment" value="unpaid" formControlName="payment" (change)="onPaymentChange()" />
-                    <label for="unpaid" class="ml-2">Unpaid</label>
-                </div>
-                
-                <!-- Price Input (conditionally shown if "Paid" is selected) -->
-                <div *ngIf="uploadform.get('payment')?.value === 'paid'" class="form-group mt-4">
-                    <label for="price" class="block text-lg font-medium mb-2">Price</label>
-                    <input type="number" id="price" formControlName="price" class="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-red-500" />
-                    <p class="text-red-700" *ngIf="uploadform.get('price')?.touched && uploadform.get('price')?.hasError('required')">
-                        Price is required when paid is selected
-                    </p>
-                </div>
+                <label for="thumbnail" class="block text-lg font-medium mb-2">Upload Thumbnail</label>
+                <input 
+                    type="file" 
+                    id="thumbnail" 
+                    name="thumbnail" 
+                    formControlName="thumbnail" 
+                    accept="image/*"
+                    class="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-red-500"
+                    (change)="onThumbnailSelect($event)" 
+                />
+                <!-- Preview the selected thumbnail -->
+                <img 
+                    *ngIf="thumbnailPreview" 
+                    [src]="thumbnailPreview" 
+                    alt="Thumbnail Preview"
+                    class="mt-4 rounded-lg shadow-md w-48 h-auto" 
+                />
+                <p 
+                    class="text-red-700" 
+                    *ngIf="uploadform.get('thumbnail')?.invalid && uploadform.get('thumbnail')?.touched"
+                >
+                    Thumbnail is required
+                </p>
             </div>
+            
         </div>
-
+    
         <!-- Upload Video -->
         <div class="form-group">
             <label for="videoFile" class="block text-lg font-medium mb-2">Upload Video</label>
-            <input type="file" id="videoFile" name="videoFile" formControlName="video" accept="video/*" class="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-red-500" (change)="onFileSelect($event)" />
+            <input type="file" id="videoFile" name="videoFile" formControlName="video" accept="video/*"
+                class="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-red-500"
+                (change)="onFileSelect($event)" />
             <p class="text-red-700" *ngIf="uploadform.get('video')?.invalid && uploadform.get('video')?.touched">
                 Video is required
             </p>
         </div>
-
+    
         <div class="text-center">
-            <button type="submit" class="bg-green-600 hover:bg-red-700 text-white px-6 py-3 rounded-full font-bold text-lg transition duration-300" [disabled]="uploadform.invalid">
+            <button type="submit"
+                class="bg-green-600 hover:bg-red-700 text-white px-6 py-3 rounded-full font-bold text-lg transition duration-300"
+                [disabled]="uploadform.invalid">
                 Upload Video
             </button>
         </div>
     </form>
+    
 </section>
 
 
 
-  
+
 <app-sidepanel></app-sidepanel>

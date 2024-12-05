@@ -1,0 +1,30 @@
+/* Adjusting the height of the video player */
+.relative {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.75rem; /* Adjust rounding as needed */
+}
+
+video {
+  width: 100%; /* Keep the width to 100% */
+  height: 500px; /* Set a fixed height for the video */
+  border-radius: inherit;
+  transition: transform 0.3s ease-in-out;
+  visibility: visible; /* Make the video visible once it's ready */
+}
+
+video:hover {
+  transform: scale(1.02); /* Slightly scale on hover for effect */
+}
+
+/* Ambient lighting effect */
+.relative::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -20px;
+  border-radius: 0.75rem;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15), transparent);
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out;
+}

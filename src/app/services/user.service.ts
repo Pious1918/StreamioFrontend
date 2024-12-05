@@ -10,6 +10,7 @@ export class UserService {
   searchTerm$ = this.searchTermSubject.asObservable();
 
   private userServiceUrl = 'http://localhost:5000/user-service'
+  private videoServiceUrl = 'http://localhost:5000/video-service'
 
   constructor(private http: HttpClient) { }
 
@@ -22,6 +23,30 @@ export class UserService {
     return this.searchTermSubject.value;
   }
 
+
+  getUploadedVideos(){
+    return this.http.get(`${this.userServiceUrl}/videos`)
+  }
+
+  updateVideo(videoId:any , updatedata:any){
+
+    return this.http.put(`${this.videoServiceUrl}/update-video/${videoId}`, updatedata)
+  }
+
+
+
+  getBanners(){
+    return this.http.get(`${this.userServiceUrl}/getbanner`)
+  }
+
+
+  deleteBannerfromS3(imageurl:string){
+    return this.http.post(`${this.userServiceUrl}/deletefroms3`,{imageurl})
+  }
+
+  deletebanner(id:string){
+    return this.http.post(`${this.userServiceUrl}/deletebanner`,{id})
+  }
 
 
 
@@ -70,14 +95,21 @@ export class UserService {
 
 
 
-  // uploadFileToS3(url: string, file: File) {
-  //   return this.http.put(url, file, {
-  //     headers: { 'Content-Type': file.type },
-  //   });
-  // }
+  uploadFileToS33(url: string, file: File) {
+    console.log("at seeee")
+    return this.http.put(url, file, {
+      headers: { 'Content-Type': file.type },
+    });
+  }
+
+  savebannerdata(data:{title:string, description:string, image:string}){
+    return this.http.post(`${this.userServiceUrl}/savebanner`,data)
+  }
+  
 
 
   uploadFileToS3(url: string, file: File): Observable<number> {
+    console.log("here @uploads3")
     const formData: FormData = new FormData()
     formData.append('file', file, file.name)
 
@@ -106,10 +138,46 @@ export class UserService {
   }
 
 
+  generateOtp(email: string) {
+    return this.http.post(`${this.userServiceUrl}/generateotp`, { email })
+  }
+
+
+  submitOtp(otp: string, email: string) {
+
+    return this.http.post(`${this.userServiceUrl}/submitotp`, { otp, email })
+  }
+
+  resetPassword(password: string, email: string) {
+    console.log("user@service")
+    return this.http.post(`${this.userServiceUrl}/resetpassword`, { password, email })
+  }
+
 
   registerAdmin(admindata: any) {
     console.log("Hello from registeradmin frontend")
 
     return this.http.post(`${this.userServiceUrl}/adminregister`, admindata)
   }
+
+
+  private email:string=''
+  setEmail(email:string){
+    this.email = email
+  }
+
+
+  getEmail():string{
+    return this.email
+  }
+
+
+  getsubscribers(){
+    return this.http.get(`${this.userServiceUrl}/subscribersList`)
+  }
+
+  getFollowingList(){
+    return this.http.get(`${this.userServiceUrl}/followingList`)
+  }
+
 }

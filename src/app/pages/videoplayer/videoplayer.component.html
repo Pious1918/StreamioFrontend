@@ -1,0 +1,182 @@
+<app-header></app-header>
+
+
+<section class="container mx-auto mt-3 p-6 flex flex-col items-center gap-4">
+
+</section>
+
+
+<section class="container mx-auto mt-10 p-4 flex flex-col md:flex-row gap-8">
+  <!-- Main Content Section (Video and Comments) -->
+  <div class="flex flex-col w-full md:w-3/4 gap-8">
+    <!-- Video container with a max width and fixed aspect ratio -->
+    <div class="video-container glow-effect bg-black w-full max-w-5xl aspect-video">
+      <video id="video-player" class="video-js vjs-custom-theme w-full h-full" muted controls preload="auto"></video>
+    </div>
+
+    <div class="video-actions-container flex items-center justify-between mt-4 bg-gray-100 p-4 rounded-md">
+      <!-- Left Section: Channel Name and Subscribe Button -->
+      <div class="channel-info flex items-center space-x-4">
+        <span class="channel-name font-bold text-lg text-gray-800">{{ channelName }}</span>
+
+        <!-- Show Subscribe Button if this.subscribed is false -->
+        <button *ngIf="subscribed === false"
+          class="subscribe-btn bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
+          Subscribe
+        </button>
+
+        <!-- Show Unsubscribe Button if this.subscribed is true -->
+        <button *ngIf="subscribed === true"
+          class="unsubscribe-btn bg-gray-300 text-black px-4 py-2 rounded-lg hover:bg-gray-400 transition">
+          Unsubscribe
+        </button>
+
+        <!-- Do not show any button if this.subscribed is 'same' -->
+      </div>
+
+
+      <!-- Right Section: Like/Dislike and Report -->
+      <div class="actions flex items-center space-x-6">
+        <!-- Heart Button -->
+        <button (click)="toggleHeart(vvid)" [ngClass]="{'text-red-500': isLiked, 'text-gray-500': !isLiked}"
+          class="heart-btn text-2xl transition duration-300">
+          {{ isLiked ? '❤' : '♡' }}
+        </button>
+
+
+        <!-- Report Icon -->
+        <button (click)="reportVideo()" class="report-icon text-gray-500 text-xl transition duration-300">
+          &#9873;
+        </button>
+      </div>
+    </div>
+
+
+
+
+
+
+    <!-- Title and Description Section -->
+    <div class="video-details mt-4 p-4 border border-gray-300 rounded-lg">
+      <h2 class="text-2xl font-semibold text-black">{{ title }}</h2>
+      <p class="mt-2 text-gray-700">
+        {{ description }}
+      </p>
+    </div>
+
+
+
+    <!-- Comments Section -->
+    <div class="comments-section w-full max-w-3xl mt-2 p-4 border border-gray-200 rounded-md shadow-md bg-white">
+      <!-- Toggle Button for Smaller Screens -->
+      <button id="toggle-comment-section" type="button"
+        class="mb-4 text-blue-500 hover:text-blue-700 transition duration-200" (click)="toggleCommentSection()">
+        Show/Hide Comments
+      </button>
+
+      <div *ngIf="showComments" class="w-full">
+        <!-- Comment Form -->
+        <form [formGroup]="commentForm" (ngSubmit)="submitComment()"
+          class="w-full max-w-3xl mt-4 p-6 border border-gray-200 rounded-md shadow-md bg-white flex items-center gap-4">
+          <!-- Emoji picker button -->
+          <div class="relative">
+            <div (click)="showOrCloseEmojiPicker()"
+              class="px-2.5 py-2 rounded-[5.07px] transition-all duration-300 ease-in-out hover:bg-[#3A3A3A]">
+              <img class="w-[20px] h-auto" src="assets/emoji.png" alt="emoji picker">
+              <div #emojiDiv class="absolute duration-300 ease-in-out -top-4 -translate-y-full -translate-x-1/2"
+                [class.hidden]="!showEmojiPicker" class="hidden">
+                <!-- Your emoji picker here -->
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Input field -->
+          <input id="comment-input" formControlName="comment" type="text" placeholder="Write a comment..."
+            class="w-full border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 transition duration-200 bg-transparent px-2 py-1" />
+
+          <!-- Submit button -->
+          <button type="submit" id="submit-comment" [disabled]="commentForm.invalid"
+            class="bg-blue-500 text-white px-4 py-2 rounded-full transition duration-200 hover:bg-blue-600 disabled:opacity-50">
+            Post
+          </button>
+        </form>
+
+        <!-- Loop through comments -->
+        <div *ngFor="let comment of comments" class="comment p-4 border-b border-gray-300 text-gray-700">
+          <span class="font-semibold">Comment:</span> {{ comment.content }}
+
+          <!-- Reply button -->
+          <button type="button" (click)="toggleReplyInput(comment.id)"
+            class="text-blue-500 hover:text-blue-700 transition duration-200">
+            Reply
+          </button>
+
+          <!-- Reply input (conditionally shown) -->
+          <div *ngIf="isReplyInputVisible(comment.id)" class="flex items-center gap-4 mt-2">
+            <input id="reply-input" [(ngModel)]="replyText" type="text" placeholder="Write a reply..."
+              class="w-full border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 transition duration-200 bg-transparent px-2 py-1" />
+            <button type="button" (click)="sendReply(comment.id)"
+              class="bg-green-500 text-white px-4 py-2 rounded-full transition duration-200 hover:bg-green-600">
+              Send
+            </button>
+          </div>
+          <br>
+
+          <!-- Show replies -->
+          <button *ngIf="(comment.replies || []).length > 0" type="button" (click)="toggleRepliesVisibility(comment.id)"
+            class="text-blue-500 hover:text-blue-700 transition duration-200">
+            Replies ({{ (comment.replies || []).length }})
+          </button>
+
+          <!-- Show replies conditionally based on the showReplies flag -->
+          <div *ngIf="comment.showReplies" class="replies-section">
+            <div *ngFor="let reply of comment.replies" class="reply mt-2 pl-4 text-gray-600">
+              <span class="font-semibold">Reply:</span> {{ reply.content }}
+              <br>
+              <!-- <small>By: {{ reply.userId }} | {{ reply.createdAt }}</small> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Side Section for Related Videos -->
+  <div class="w-full md:w-1/4">
+    <!-- List of videos -->
+    <div class="side-video-cards space-y-4">
+      @for (video of otherVideos; track video._id) {
+
+      <a class="movie-card relative rounded-lg overflow-hidden shadow-xl cursor-pointer"
+        (click)="onMovieClick(video._id)">
+        <div
+          class="video-card bg-white p-4 rounded-md shadow-md border border-gray-200 hover:scale-105 transition-all duration-300 ease-in-out">
+          <div class="video-thumbnail h-40 bg-gray-300 rounded-md overflow-hidden">
+            <!-- Video thumbnail -->
+            <img [src]="video.thumbnail" [alt]="video.title" class="w-full h-[200px] object-cover">
+
+          </div>
+          <div class="mt-2 text-sm text-gray-700">
+            <span class="font-semibold block truncate">{{ video.title }}</span>
+            <div class="flex items-center gap-2 text-gray-300 text-sm mt-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <span>{{ video.views }}</span>
+              <span class="mx-2">•</span>
+              <span>{{ video.createdAt | relativetime }}</span>
+            </div>
+          </div>
+        </div>
+      </a>
+      }
+    </div>
+
+  </div>
+
+</section>

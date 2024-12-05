@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 })
 export class AdminService {
   private userServiceUrl = 'http://localhost:5000/user-service'
+  private videoServiceUrl = 'http://localhost:5000/video-service'
 
   constructor(private http: HttpClient) { }
 
@@ -23,14 +24,32 @@ export class AdminService {
  }
 
 
- loadAdmindash(page: number = 1, limit: number = 6){
-   console.log("Hai from admindash")
-   return this.http.get(`${this.userServiceUrl}/userlist?page=${page}&limit=${limit}`)
- }
+//  loadAdmindash(page: number = 1, limit: number = 6){
+//    console.log("Hai from admindash")
+//    return this.http.get(`${this.userServiceUrl}/userlist?page=${page}&limit=${limit}`)
+//  }
+loadAdmindash(page: number = 1, limit: number = 6, search: string = '') {
+  console.log('Loading users with search term:', search);
+  return this.http.get(
+    `${this.userServiceUrl}/userlist?page=${page}&limit=${limit}&search=${search}`
+  );
+}
+
 
 
  changeStatus(status:string  , userId:any){
    console.log("@service")
    return this.http.put(`${this.userServiceUrl}/userds/${userId}/status`,{status})
  }
+
+
+ getAlluserCount(){
+  return this.http.get(`${this.userServiceUrl}/countuser`)
+ }
+
+
+ topfivevideos(){
+  return this.http.get(`${this.videoServiceUrl}/topfive`)
+ }
+
 }

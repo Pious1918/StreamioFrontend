@@ -4,9 +4,11 @@ import Swal from 'sweetalert2';
 import { AdminHeaderComponent } from '../../shared/components/admin-header/admin-header.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { debounceTime, Subject, Subscription } from 'rxjs';
 import { User } from '../../interfaces/user.interfaces';
 import { UserStatus } from '../../enums/userStatusenum';
+import { UserService } from '../../services/user.service';
+import { Router } from '@angular/router';
 
 
 
@@ -17,7 +19,7 @@ import { UserStatus } from '../../enums/userStatusenum';
 @Component({
   selector: 'app-admin-user-list',
   standalone: true,
-  imports: [AdminHeaderComponent, CommonModule, FormsModule],
+  imports: [ CommonModule, FormsModule],
   templateUrl: './admin-user-list.component.html',
   styleUrl: './admin-user-list.component.css'
 })
@@ -26,6 +28,12 @@ export class AdminUserListComponent implements OnInit {
   defaultProfilePic: string = './assets/avathar.jpg'
 
 
+  filters = {
+  
+    searchTerm: '',
+   
+  };
+
   userList: any[] = []
 
   // Pagination variables
@@ -33,20 +41,30 @@ export class AdminUserListComponent implements OnInit {
 
   currentPage: number = 1;
   totalPages: number = 0;
-  limit: number = 6;
+  limit: number = 5;
 
+  searchTerm: string = '';
+  searchTermSubject = new Subject<string>()
 
   private _subscription: Subscription = new Subscription(); // To track all subscriptions
 
-  constructor(private _adminservice: AdminService) { }
+  constructor(private _adminservice: AdminService, private _userService:UserService, private _router: Router) { }
 
   ngOnInit(): void {
     this.loadAdmin(this.currentPage);
+
+
+        // Debouncing search input
+        const searchSub = this.searchSubject.pipe(debounceTime(300)).subscribe((term: string) => {
+          this.searchTerm = term; // Update the search term
+          this.loadAdmin(this.currentPage, term); // Load users with the search term
+        });
+
   }
 
 
-  loadAdmin(page: number) {
-    const adminSub = this._adminservice.loadAdmindash(page, this.limit).subscribe((res: any) => {
+  loadAdmin(page: number, search:string='') {
+    const adminSub = this._adminservice.loadAdmindash(page, this.limit , search).subscribe((res: any) => {
       console.log(res.users)
       this.userList = res.users
       this.totalPages = res.totalPages;
@@ -135,9 +153,30 @@ export class AdminUserListComponent implements OnInit {
 
 
 
+  onSearchTermChange(term: string) {
+    this.searchTerm = term
+    this._userService.updateSearchTerm(term)
+    this.searchTermSubject.next(term)
+  }
 
 
+  // onSearch() {
+  //   if (this.searchTerm.trim()) {
+  //     this._router.navigate(['/results'], { queryParams: { query: this.searchTerm } });
+  //   }
+  // }
 
+
+  clearSearch() {
+    this.searchTerm = '';
+    this._userService.updateSearchTerm('')
+
+  }
+  searchSubject: Subject<string> = new Subject<string>();
+  onSearch(event: Event) {
+    const searchTerm = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(searchTerm); 
+  }
 
 
 
