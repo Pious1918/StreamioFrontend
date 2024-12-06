@@ -53,23 +53,35 @@
 </section>
 
 
-<!-- <section>
-    <div class="container overflow-x-auto whitespace-nowrap py-4">
-        <div class="flex gap-4 items-center px-4">
-          <button class="text-center text-lg font-semibold text-gray-700 py-2 px-4 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none transition-all">Live</button>
-          <button class="text-center text-lg font-semibold text-gray-700 py-2 px-4 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none transition-all">Trending</button>
-          <button class="text-center text-lg font-semibold text-gray-700 py-2 px-4 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none transition-all">Sports</button>
-          <button class="text-center text-lg font-semibold text-gray-700 py-2 px-4 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none transition-all">Movies</button>
-          <button class="text-center text-lg font-semibold text-gray-700 py-2 px-4 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none transition-all">News</button>
-        </div>
+<section class="tabs-container px-12 py-6 items-center justify-center">
+  <div class="tabs-wrapper relative flex items-center gap-6">
+    <div class="tabs flex-1 overflow-x-auto whitespace-nowrap rounded-md"
+      [ngClass]="{ 'justify-center': tabs.length <= 5, 'justify-start': tabs.length > 5 }">
+      <div class="tabs-inner flex gap-4 items-center px-4">
+        <button 
+          *ngFor="let tab of tabs"
+          class="tab text-center text-lg font-semibold text-gray-700 py-2 px-4 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none transition-all"
+          (click)="onTabClick(tab)">
+          {{ tab }}
+        </button>
       </div>
-</section> -->
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
 
 
 <section class="container mx-auto mt-10 p-6 flex flex-col items-center gap-8">
   <div class="min-h-screen p-8">
     <div class="container mx-auto">
-      <h1 class="text-3xl font-bold text-black mb-8">Featured Movies</h1>
+      <h1 class="text-3xl font-bold text-black mb-8">Featured {{tab}}</h1>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
         @for (movie of allvideos; track movie._id) {

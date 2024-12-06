@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { HeaderComponent } from '../../shared/components/user-header/header.component';
 import { SidepanelComponent } from '../../shared/components/user-sidepanel/sidepanel.component';
 import { Router, RouterModule } from '@angular/router';
@@ -45,6 +45,7 @@ export interface IvideoDocument {
   description: string,
   likes: number,
   views: number,
+  report: number,
   createdAt: Date
   videolink: string,
   thumbnail?:string,
@@ -90,7 +91,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 
     this.loadBanners()
-    this.loadVideos()
+    this.loadVideos(this.tab)
   }
 
   ngOnDestroy(): void {
@@ -141,12 +142,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 
 
-  videos = [
-    { title: 'Video 1', description: 'Description 1', source: 'https://streamiovideoupload.s3.eu-north-1.amazonaws.com/video1.mp4' },
-    { title: 'Video 2', description: 'Description 2', source: 'https://streamiovideoupload.s3.eu-north-1.amazonaws.com/3116737-hd_1920_1080_25fps.mp4' },
-    { title: 'Video 3', description: 'Description 3', source: 'https://streamiovideoupload.s3.eu-north-1.amazonaws.com/3116737-hd_1920_1080_25fps.mp4' },
-    // Add more video objects as needed
-  ];
+
 
   goToVideoList() {
     this.router.navigate(['/videos']);
@@ -159,8 +155,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   videolink: string[] = []; // Declare the videolink array
 
-  loadVideos() {
-    this._videoService.getAllVideos().subscribe((res: IvideoDocument[]) => {
+  loadVideos(tabvalue:string) {
+    this._videoService.getAllVideos(tabvalue).subscribe((res: IvideoDocument[]) => {
       console.log("resss from lod video", res)
       this.allvideos = res;
       this.videolink = res.map(video => `https://d3qrczdrpptz8b.cloudfront.net/${video.videolink}`);  // Construct video link URL
@@ -210,9 +206,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 toggleMenu(movieId: string, event: Event): void {
   if (this.activeMenu === movieId) {
-    this.activeMenu = null; // Close the menu
+    this.activeMenu = null; 
   } else {
-    this.activeMenu = movieId; // Open the menu
+    this.activeMenu = movieId; 
   }
 }
 
@@ -263,6 +259,30 @@ saveToWatchLater(movieId: string): void {
 
   this.activeMenu = null; // Close the menu after saving
 }
+
+
+tab='All'
+tabs = ["All","Automobile", "Music", 'Sports', 'Entertainment', 'Education', 'Gaming', 'Lifestyle', 'Food' ,'DIY', 'Others', "Movies"];
+
+onTabClick(tab: string): void {
+  console.log('Selected Tab:', tab);
+
+  this.tab=tab
+  this.loadVideos(tab)
+}
+
+@ViewChild('tabsContainer', { static: true }) tabsContainer!: ElementRef;
+
+scrollTabs(direction: 'left' | 'right') {
+  const container = this.tabsContainer.nativeElement;
+  const scrollAmount = 200; 
+  direction === 'left' 
+    ? (container.scrollLeft -= scrollAmount) 
+    : (container.scrollLeft += scrollAmount);
+}
+
+
+
 
 
 

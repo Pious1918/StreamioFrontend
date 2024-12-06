@@ -44,10 +44,14 @@
         </button>
 
 
-        <!-- Report Icon -->
-        <button (click)="reportVideo()" class="report-icon text-gray-500 text-xl transition duration-300">
+        <!-- Report Video Button -->
+        <button (click)="openReportModal()" class="report-icon text-gray-500 text-xl transition duration-300">
           &#9873;
         </button>
+
+
+
+
       </div>
     </div>
 
@@ -104,7 +108,7 @@
 
         <!-- Loop through comments -->
         <div *ngFor="let comment of comments" class="comment p-4 border-b border-gray-300 text-gray-700">
-          <span class="font-semibold">Comment:</span> {{ comment.content }}
+          <span class="font-semibold">{{comment.username}}:</span> {{ comment.content }}
 
           <!-- Reply button -->
           <button type="button" (click)="toggleReplyInput(comment.id)"
@@ -132,7 +136,7 @@
           <!-- Show replies conditionally based on the showReplies flag -->
           <div *ngIf="comment.showReplies" class="replies-section">
             <div *ngFor="let reply of comment.replies" class="reply mt-2 pl-4 text-gray-600">
-              <span class="font-semibold">Reply:</span> {{ reply.content }}
+              <span class="font-semibold">{{reply.username}}:</span> {{ reply.content }}
               <br>
               <!-- <small>By: {{ reply.userId }} | {{ reply.createdAt }}</small> -->
             </div>
@@ -180,3 +184,65 @@
   </div>
 
 </section>
+
+
+
+
+<section class="container mx-auto mt-3 p-6 flex flex-col items-center gap-4">
+
+      <!-- Report Video Modal -->
+      <div *ngIf="isReportModalOpen"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <!-- Modal Content -->
+      <div class="bg-white w-full max-w-md p-6 rounded-lg shadow-lg">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Report Video</h3>
+        <p class="text-sm text-gray-600 mb-4">Please select a reason for reporting this video:</p>
+
+        <!-- Report Form -->
+        <form [formGroup]="reportForm" (ngSubmit)="submitReport()">
+          <div class="space-y-3">
+            <!-- Radio Buttons -->
+            <label class="flex items-center space-x-2">
+              <input type="radio" formControlName="reason" value="Inappropriate Content" class="text-blue-500">
+              <span class="text-gray-700">Inappropriate Content</span>
+            </label>
+            <label class="flex items-center space-x-2">
+              <input type="radio" formControlName="reason" value="Copyright Infringement" class="text-blue-500">
+              <span class="text-gray-700">Copyright Infringement</span>
+            </label>
+            <label class="flex items-center space-x-2">
+              <input type="radio" formControlName="reason" value="Spam or Misleading" class="text-blue-500">
+              <span class="text-gray-700">Spam or Misleading</span>
+            </label>
+            <label class="flex items-center space-x-2">
+              <input type="radio" formControlName="reason" value="Other" class="text-blue-500">
+              <span class="text-gray-700">Other</span>
+            </label>
+          </div>
+
+          <!-- Additional Details -->
+          <!-- <textarea formControlName="additionalDetails" placeholder="Provide additional details (optional)"
+            class="w-full mt-4 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            rows="4">
+  </textarea> -->
+
+          <!-- Modal Actions -->
+          <div class="mt-6 flex items-center justify-end space-x-4">
+            <button type="button" (click)="closeReportModal()"
+              class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
+              Cancel
+            </button>
+            <button type="submit" [disabled]="!reportForm.valid"
+              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+
+</section>
+
+  

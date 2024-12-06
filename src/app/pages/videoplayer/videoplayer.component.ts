@@ -19,6 +19,7 @@ import { io } from 'socket.io-client'
 
 interface Reply {
   userId: string;
+  username: string;
   content: string;
   createdAt: string;
 }
@@ -26,6 +27,7 @@ interface Reply {
 
 interface Comment {
   id: string;
+  username: string;
   content: string;
   replies: Reply[]; // Add replies as an array of Reply objects
   showReplies?: boolean;  // optional property to toggle replies visibility
@@ -46,6 +48,9 @@ export class VideoplayerComponent {
   otherVideos: IvideoDocument[] = [];
   private socket: any;
 
+
+  isReportModalOpen: boolean = false; // Controls modal visibility
+  reportForm!: FormGroup; // Form for the report submission
 
   @ViewChild('emojiDiv')
   private emojiDiv!: ElementRef<HTMLDivElement>;
@@ -128,6 +133,12 @@ export class VideoplayerComponent {
     this.incrementViews()
 
     this.fetchOthervideos()
+
+
+    this.reportForm = this.fb.group({
+      reason: ['', Validators.required], // Report reason
+    });
+
 
   }
 
@@ -229,6 +240,7 @@ export class VideoplayerComponent {
           // Create a structured comment object
           const newComment = {
             id: response.id, // Assuming the API returns the comment ID
+            username: response.username,
             content: response.comment || this.commentForm.value.comment, // Use response data or fallback to form data
             replies: [] // Initialize with an empty replies array
           };
@@ -296,6 +308,7 @@ export class VideoplayerComponent {
             // Add the new reply to the comment's replies array
             comment.replies.push({
               content: this.replyText,
+              username: res.reply.username,
               userId: res.userId || 'currentUser', // Use currentUser if backend doesn't return userId
               createdAt: new Date().toISOString(), // Use current time or one from backend
             });
@@ -362,9 +375,45 @@ export class VideoplayerComponent {
   }
 
   // Report video action
-  reportVideo() {
-    alert('This video has been reported.');
+  reportVideo(videoId: string) {
+
+    console.log("videoid from reportvi", videoId)
+    // alert('This video has been reported.');
   }
+
+
+
+
+  // Open the report modal
+openReportModal() {
+  this.isReportModalOpen = true;
+}
+
+// Close the report modal
+closeReportModal() {
+  this.isReportModalOpen = false;
+}
+
+// Submit the report
+submitReport() {
+  if (this.reportForm.valid) {
+    const reportData = {
+      videoId: this.vvid, // Pass the current video ID
+      reason: this.reportForm.value.reason,
+    };
+
+
+    this._videoservice.reportVideo(reportData).subscribe((res:any)=>{
+      console.log("res from reportVideo",res)
+    })
+
+    console.log("report data is ",reportData)
+    this.closeReportModal(); // Close the modal
+
+  }
+}
+
+
 
 
 

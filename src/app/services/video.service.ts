@@ -39,8 +39,8 @@ export class VideoService {
   }
 
 
-  getAllVideos(): Observable<IvideoDocument[]>{
-    return this._http.get<IvideoDocument[]>(`${this._videoServiceUrl}/videos`)
+  getAllVideos(tabvalue:string): Observable<IvideoDocument[]>{
+    return this._http.get<IvideoDocument[]>(`${this._videoServiceUrl}/videos?tab=${tabvalue}`)
   }
 
 
@@ -93,6 +93,12 @@ export class VideoService {
   getwatchlater(){
     return this._http.get(`${this._videoServiceUrl}/getwatchlatervideos`)
 
+  }
+
+
+  reportVideo(reportVideodata:any){
+
+    return this._http.post(`${this._videoServiceUrl}/reportvideo`,{reportVideodata})
   }
 
 }
