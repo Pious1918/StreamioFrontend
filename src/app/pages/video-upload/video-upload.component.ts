@@ -21,12 +21,13 @@ import { catchError, lastValueFrom } from 'rxjs';
 })
 export class VideoUploadComponent {
   selectedFileName: string | null = null;
-  selectedFile: File | null = null;  // to store the actual file for uploading
+  selectedFile: File | null = null;  
+  thumbnailPreview: string | null = null; 
 
 
 
   selectedThumbnailFileName: string | null = null;
-  selectedThumbnailFile: File | null = null;  // to store the actual file for uploading
+  selectedThumbnailFile: File | null = null;  
 
 
 
@@ -147,21 +148,59 @@ export class VideoUploadComponent {
         );
 
 
-        // Start both uploads in parallel
         videoUpload$.subscribe({
           next: (progress) => {
             this.uploadProgress = progress; // Update video upload progress
             console.log(`Video Upload Progress: ${progress}%`);
+        
+            // Check if SweetAlert is already open, and update the content dynamically
+            if (Swal.isVisible()) {
+              Swal.update({
+                html: `Uploading is progressing: <strong>${progress}%</strong>. Please don't go back.`,
+              });
+            } else {
+              // Initial display of the SweetAlert
+              Swal.fire({
+                title: 'Uploading...',
+                html: `Uploading is progressing: <strong>${progress}%</strong>. Please don't go back.`,
+                icon: 'info',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                  Swal.showLoading(); // Optional: show loading indicator
+                }
+              });
+            }
           },
           error: (error) => {
             console.error("Error uploading video:", error);
+        
+            // Close the current SweetAlert and show an error modal
+            Swal.close();
+            Swal.fire({
+              title: 'Error!',
+              text: 'An error occurred during the video upload. Please try again.',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
           },
           complete: async () => {
             console.log("Video upload completed successfully");
-            const videoUrl = presignedUrl.split('?')[0];
-            const thumbnailUrl = thumbnailPresignedUrl.split('?')[0];
-
+        
+            // Close the current SweetAlert and show a processing message
+            Swal.update({
+              title: 'Processing...',
+              html: 'Video upload completed. Video is now processing. Please wait.',
+              icon: 'info',
+              showConfirmButton: false,
+           
+            });
+        
             try {
+              const videoUrl = presignedUrl.split('?')[0];
+              const thumbnailUrl = thumbnailPresignedUrl.split('?')[0];
+        
               // Send backend data after uploads complete
               const backendData = {
                 title: this.uploadform.get('title')?.value,
@@ -170,18 +209,18 @@ export class VideoUploadComponent {
                 payment: this.uploadform.get('payment')?.value,
                 price: this.uploadform.get('price')?.value,
                 category: this.uploadform.get('category')?.value,
-
                 videoUrl,
                 thumbnailUrl
               };
-
+        
               console.log("Sending data to backend:", backendData);
-
+        
               // Convert video to HLS format
               const hlsResponse = await lastValueFrom(this._videoService.convertHLS(backendData));
               console.log("HLS Conversion Response:", hlsResponse);
-
-              // Show success message after upload and conversion
+        
+              // Close the SweetAlert and show success message
+              Swal.close();
               this.showsuccess();
             } catch (error) {
               console.error("Error during HLS conversion or backend data submission:", error);
@@ -198,45 +237,6 @@ export class VideoUploadComponent {
 
 
 
-
-
-        // Upload to S3 and track progress
-        // this._userservice.uploadFileToS3(presignedUrl, this.selectedFile).subscribe({
-        //   next: (progress) => {
-        //     this.uploadProgress = progress; // Update progress
-        //     console.log(`Upload Progress: ${progress}%`);
-        //   },
-        //   error: (error) => {
-        //     console.log("Error uploading", error);
-        //   },
-        //   complete: async () => {
-        //     console.log("Upload completed successfully");
-
-        //     const s3FileUrl = presignedUrl.split('?')[0];
-        //     const backendData = {
-        //       title: this.uploadform.get('title')?.value,
-        //       description: this.uploadform.get('description')?.value,
-        //       visibility: this.uploadform.get('visibility')?.value,
-        //       payment: this.uploadform.get('payment')?.value,
-        //       price: this.uploadform.get('price')?.value,
-        //       category: this.uploadform.get('category')?.value,
-        //       fileUrl: s3FileUrl
-        //     };
-
-        //     try {
-        //       // Convert to HLS and wait for completion
-        //       const hlsresponse = await lastValueFrom(this._videoService.convertHLS(backendData));
-        //       console.log("HLS Response:", hlsresponse);
-
-        //       // Show success message after both upload and conversion are complete
-        //       this.showsuccess();
-
-        //       // this._router.navigate(['']);
-        //     } catch (error) {
-        //       console.error("Error converting to HLS", error);
-        //     }
-        //   }
-        // });
       } else {
         console.error("Failed to get presigned URL");
       }
@@ -254,16 +254,15 @@ export class VideoUploadComponent {
 
       icon: 'success',
       toast: true,
-      position: 'top-end', // Common toast position for a notification
-      showConfirmButton: false, // Optional: No confirm button for toast
-      timer: 3000 // Display for 3 seconds
+      position: 'top-end', 
+      showConfirmButton: false, 
+      timer: 3000 
     });
   }
 
 
 
 
-  thumbnailPreview: string | null = null; // To hold the preview URL
 
   onThumbnailSelect(event: Event): void {
     const fileInput = event.target as HTMLInputElement;
@@ -272,13 +271,12 @@ export class VideoUploadComponent {
 
       console.log("file @ thumbnail", file)
 
-      this.selectedThumbnailFile = file; // Save the file for upload later
+      this.selectedThumbnailFile = file; 
       this.selectedThumbnailFileName = file.name;
 
-      // Use FileReader to generate a preview
       const reader = new FileReader();
       reader.onload = () => {
-        this.thumbnailPreview = reader.result as string; // Save the preview URL
+        this.thumbnailPreview = reader.result as string; 
       };
       reader.readAsDataURL(file);
     }

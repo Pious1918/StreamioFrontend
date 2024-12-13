@@ -45,7 +45,7 @@
 
 
         <!-- Report Video Button -->
-        <button (click)="openReportModal()" class="report-icon text-gray-500 text-xl transition duration-300">
+        <button *ngIf="subscribed !== 'same'" (click)="openReportModal(uploaderId)" class="report-icon text-gray-500 text-xl transition duration-300">
           &#9873;
         </button>
 

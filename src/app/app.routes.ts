@@ -27,6 +27,9 @@ import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard
 import { UserLikedPageComponent } from './pages/user-liked-page/user-liked-page.component';
 import { LikedVideoplayerComponent } from './pages/liked-videoplayer/liked-videoplayer.component';
 import { UserSubscriberslistComponent } from './pages/user-subscriberslist/user-subscriberslist.component';
+import { AdminReportVideoComponent } from './pages/admin-report-video/admin-report-video.component';
+import { ReportVideoplayerComponent } from './pages/report-videoplayer/report-videoplayer.component';
+import { AdminReportVideoplayerComponent } from './pages/admin-report-videoplayer/admin-report-videoplayer.component';
 
 
 
@@ -80,6 +83,7 @@ export const routes: Routes = [
     // {path:'video/:id',component:VideoPlayerComponent ,canActivate:[AuthService]},
     {path:'video/:id',component:VideoplayerComponent ,canActivate:[AuthService]},
     {path:'likedvideo/:id',component:LikedVideoplayerComponent ,canActivate:[AuthService]},
+    {path:'reportvideo/:id',component:ReportVideoplayerComponent ,canActivate:[AuthService]},
     {path:'subscribers',component:UserSubscriberslistComponent ,canActivate:[AuthService]},
     {path:'favorites',component:UserLikedPageComponent ,canActivate:[AuthService]},
     {path:'error', component:ErrorComponent, canActivate:[AuthService]},
@@ -101,6 +105,8 @@ export const routes: Routes = [
             {path:'addbanner', component:AdminBannerManagementComponent , canActivate:[AdminAuthgService]},
             {path:'banner', component:AdminBannerListComponent , canActivate:[AdminAuthgService]},
             {path:'admindash', component:AdminDashboardComponent , canActivate:[AdminAuthgService]},
+            {path:'adminreportvideo', component:AdminReportVideoComponent , canActivate:[AdminAuthgService]},
+            {path:'adminvideoplayer/:id', component:AdminReportVideoplayerComponent , canActivate:[AdminAuthgService]},
         ]
     },
 

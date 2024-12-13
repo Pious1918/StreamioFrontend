@@ -13,6 +13,7 @@ import { Database, Picker } from 'emoji-picker-element';
 import { IvideoDocument } from '../user-home/home.component';
 import { RelativetimePipe } from '../../shared/pipes/relativetime.pipe';
 import { io } from 'socket.io-client'
+import Swal from 'sweetalert2'
 
 
 
@@ -63,6 +64,7 @@ export class VideoplayerComponent {
 
   title!: string
   description!: string
+  uploaderId!: string
 
   commentForm!: FormGroup;
 
@@ -155,11 +157,12 @@ export class VideoplayerComponent {
   // Fetching  video data from the service
   private fetchVideo(videoId: string) {
     this._videoservice.getIndividualVideos(videoId).subscribe((res: any) => {
-      console.log('Response:', res);
+      console.log('fetched video Response:', res);
       this.title = res._doc.title
       this.description = res._doc.description
       console.log('Video link:', res.videolink);
       this.linkkk = res._doc.videolink;
+      this.uploaderId = res._doc.uploaderId
       this.comments = res.comments
       this.channelName = res.uploader.name
       this.subscribed = res.subscribed
@@ -240,7 +243,7 @@ export class VideoplayerComponent {
           // Create a structured comment object
           const newComment = {
             id: response.id, // Assuming the API returns the comment ID
-            username: response.username,
+            username: response.commntdata.username,
             content: response.comment || this.commentForm.value.comment, // Use response data or fallback to form data
             replies: [] // Initialize with an empty replies array
           };
@@ -300,17 +303,15 @@ export class VideoplayerComponent {
           if (comment) {
             console.log('Comment inside if condition:', comment);
 
-            // Ensure replies array exists
             if (!comment.replies) {
               comment.replies = [];
             }
 
-            // Add the new reply to the comment's replies array
             comment.replies.push({
               content: this.replyText,
               username: res.reply.username,
-              userId: res.userId || 'currentUser', // Use currentUser if backend doesn't return userId
-              createdAt: new Date().toISOString(), // Use current time or one from backend
+              userId: res.userId || 'currentUser', 
+              createdAt: new Date().toISOString(), 
             });
 
             console.log('Updated replies:', comment.replies);
@@ -385,33 +386,72 @@ export class VideoplayerComponent {
 
 
   // Open the report modal
-openReportModal() {
-  this.isReportModalOpen = true;
-}
-
-// Close the report modal
-closeReportModal() {
-  this.isReportModalOpen = false;
-}
-
-// Submit the report
-submitReport() {
-  if (this.reportForm.valid) {
-    const reportData = {
-      videoId: this.vvid, // Pass the current video ID
-      reason: this.reportForm.value.reason,
-    };
-
-
-    this._videoservice.reportVideo(reportData).subscribe((res:any)=>{
-      console.log("res from reportVideo",res)
-    })
-
-    console.log("report data is ",reportData)
-    this.closeReportModal(); // Close the modal
-
+  openReportModal(uploaderId: string) {
+    console.log("uploaderid", uploaderId)
+    this.isReportModalOpen = true;
   }
-}
+
+  // Close the report modal
+  closeReportModal() {
+    this.isReportModalOpen = false;
+  }
+
+  // Submit the report
+  submitReport() {
+    if (this.reportForm.valid) {
+      const reportData = {
+        uploaderId: this.uploaderId,
+        videoId: this.vvid, // Pass the current video ID
+        reason: this.reportForm.value.reason,
+      };
+  
+      this._videoservice.reportVideo(reportData).subscribe(
+        (res: any) => {
+          console.log("res from reportVideo", res);
+  
+          // Check the message and show the corresponding toast
+          if (res.message === "Video reported successfully") {
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Video reported successfully!',
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+            });
+          } else if (res.message === "You already reported this video") {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'You already reported this video!',
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+            });
+          }
+  
+          this.closeReportModal(); // Close the modal
+        },
+        (error) => {
+          console.error("Error reporting video", error);
+  
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred while reporting the video!',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+          });
+        }
+      );
+  
+      console.log("Report data is ", reportData);
+    }
+  }
 
 
 

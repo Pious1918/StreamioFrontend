@@ -6,7 +6,7 @@
   <nav class="shadow">
     <div class="flex justify-between items-center py-6 px-10 container mx-auto">
       <div>
-        <a href="admin/admindash" class="flex items-center space-x-3 rtl:space-x-reverse">
+        <a routerLink="/admin/admindash" class="flex items-center space-x-3 rtl:space-x-reverse">
           <img src="assets/logoyellow.png" class="h-12" alt="Streamio Logo" />
           <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Admin Panel</span>
         </a>      </div>
@@ -24,6 +24,7 @@
             <li><a routerLink="/admin/admindash" class="text-gray-700 hover:text-indigo-600 text-md cursor-pointer">Dashboard</a></li>
             <li><a routerLink="/admin/userlist" class="text-gray-700 hover:text-indigo-600 text-md cursor-pointer">User List</a></li>
             <li><a routerLink="/admin/banner" class="text-gray-700 hover:text-indigo-600 text-md cursor-pointer">Banner Management</a></li>
+            <li><a routerLink="/admin/adminreportvideo" class="text-gray-700 hover:text-indigo-600 text-md cursor-pointer">Reported videos</a></li>
          
             <li><a (click)="onLogout()" class="text-white bg-red-600 px-4 py-2 rounded-md hover:bg-red-700 text-md cursor-pointer">Logout</a></li>
           </ul>

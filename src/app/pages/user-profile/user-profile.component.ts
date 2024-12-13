@@ -35,6 +35,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   allvideos: any[] = [];
   privatevideos: any[] = [];
   watchlatervideos: any[] = [];
+  reportVideos: any[] = [];
 
   isProfileVisible = false;
   isEditing = false;
@@ -48,6 +49,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   selectedImage: string | ArrayBuffer | null = null; // to store selected image
   selectedFile: File | null = null;  // to store the actual file for uploading
   uploadProgress: string = '';
+
+  isreportModalOpen: boolean = false;
 
 
   private subscription!: Subscription;
@@ -106,6 +109,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this.privatevideosOnly()
     this.fetchwaterLaterVideos()
 
+    this.fetchReportVideos()
+
   }
 
   activeTab = 'uploaded';  // Default active tab
@@ -146,9 +151,18 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
 
+  fetchReportVideos(){
+    this._videoService.reportVideos().subscribe((res:any)=>{
+      console.log("fetched reported videos are",res)
+
+      this.reportVideos=res.videos
+    })
+  }
+
+
   openModal(movie: any) {
-    this.selectedVideo = { ...movie }; // Make a shallow copy
-    this.originalVideo = { ...movie }; // Store the original values for comparison
+    this.selectedVideo = { ...movie }; 
+    this.originalVideo = { ...movie }; 
     this.isModalOpen = true;
   }
 
@@ -159,10 +173,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
   // Update video details after editing
   updateVideo() {
-    // Create an object to hold only the changed properties
     const updatedFields: any = {};
 
-    // Check if any of the fields have changed
+    // Checking if any of the fields have changed
     if (this.selectedVideo.title !== this.originalVideo.title) {
       updatedFields.title = this.selectedVideo.title;
     }
@@ -173,12 +186,10 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       updatedFields.visibility = this.selectedVideo.visibility;
     }
 
-    // If any fields are updated, call the backend service
     if (Object.keys(updatedFields).length > 0) {
       console.log('Updated fields:', updatedFields);
 
 
-      // Check if visibility changed and update the privatevideos array accordingly
       if (this.originalVideo.visibility === 'private' && this.selectedVideo.visibility === 'public') {
         // Remove from privatevideos array
         const index = this.privatevideos.findIndex(video => video._id === this.selectedVideo._id);
@@ -202,12 +213,6 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
-
-  toggleProfile(): void {
-    this.isProfileVisible = !this.isProfileVisible;
-  }
 
 
   startEditing(): void {
@@ -316,8 +321,6 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     console.log("id is ", movieId)
     this.router.navigate(['/video', movieId])
 
-
-
   }
 
 
@@ -334,14 +337,31 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
 
-  // TrackBy function for optimization
   trackById(index: number, item: any): any {
     return item._id;
   }
+
+  
   trackByMovieId(index: number, movie: any): string {
     return movie._id;
   }
 
 
+
+  onReportvideoClick(videoId:string){
+    console.log("review video id on clickin",videoId)
+    this.router.navigate(['/reportvideo', videoId])
+  }
+
+
+  openreportDetailsmodal() {
+    console.log("report modal clicked")
+    this.isreportModalOpen = true;
+  }
+
+  // Method to close the modal
+  closereportDetailsmodal() {
+    this.isreportModalOpen = false;
+  }
 
 }

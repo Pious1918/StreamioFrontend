@@ -27,4 +27,11 @@ export class LiveListComponent {
       this.ongoingLives=res.allLives
     })
   }
+
+
+
+  trackByLiveId(index: number, live: any): string {
+    return live._id;
+}
+
 }

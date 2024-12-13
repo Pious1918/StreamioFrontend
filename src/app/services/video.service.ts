@@ -50,6 +50,12 @@ export class VideoService {
 
   }
 
+  fetchVideoreportReason(videoId:string){
+    return this._http.get(`${this._videoServiceUrl}/reportreason/${videoId}`)
+    // return this._http.get(`${this._videoServiceUrl}/video/${movieId}/hls`);
+
+  }
+
 
   getUploadedVideos():Observable<IvideoDocument[]>{
     return this._http.get<IvideoDocument[]>(`${this._videoServiceUrl}/getuseruploadedvideo`)
@@ -96,9 +102,36 @@ export class VideoService {
   }
 
 
+  reportVideos(){
+    return this._http.get(`${this._videoServiceUrl}/getreportvideos`)
+
+  }
+
+  fetchReportAdmin(){
+    return this._http.get(`${this._videoServiceUrl}/reportvideosAdmin`)
+
+  }
+
+
   reportVideo(reportVideodata:any){
 
     return this._http.post(`${this._videoServiceUrl}/reportvideo`,{reportVideodata})
+  }
+
+
+  verifyVideoByadmin(videoId:string){
+    return this._http.post(`${this._videoServiceUrl}/verifybyadmin`,{videoId})
+  }
+
+
+  verifyVideoByuser(videoId:string){
+    return this._http.post(`${this._videoServiceUrl}/verifybyuser`,{videoId})
+  }
+
+
+
+  sendNotice(noticedata:any){
+    return this._http.post(`${this._videoServiceUrl}/noticebyadmin`,{noticedata})
   }
 
 }

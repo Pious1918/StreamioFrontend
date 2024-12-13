@@ -1,0 +1,89 @@
+<section class="container mx-auto mt-3 p-6 flex flex-col items-center gap-4">
+
+</section>
+
+
+
+<section class="container mx-auto mt-10 p-4 flex flex-col md:flex-row gap-8">
+    <!-- Main Content Section (Video and Comments) -->
+    <div class="flex flex-col w-full md:w-3/4 gap-8">
+        <!-- Video container with a max width and fixed aspect ratio -->
+        <div class="video-container glow-effect bg-black w-full max-w-5xl aspect-video">
+            <video id="video-player" class="video-js vjs-custom-theme w-full h-full" muted controls
+                preload="auto"></video>
+        </div>
+
+        <div class="video-actions-container flex items-center justify-between mt-4 bg-gray-100 p-4 rounded-md">
+            <!-- Left Section: Channel Name and Subscribe Button -->
+            <div class="channel-info flex items-center space-x-4">
+                <span class="channel-name font-bold text-lg text-gray-800">{{ channelName }}</span>
+            </div>
+
+            <div class="video-actions-container flex items-center justify-between mt-4 bg-gray-100 p-4 rounded-md">
+                <!-- Buttons for Send Notice and Verified -->
+                <div class="flex items-center space-x-4">
+                    <button class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded"
+                        (click)="openNoticeModal()">
+                        Send Notice
+                    </button>
+                    <button class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded"
+                        (click)="verifyVideo()">
+                        Verified
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal for Send Notice -->
+        
+            <div *ngIf="showNoticeModal" class="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+                <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Send Notice</h3>
+                    <textarea class="w-full h-32 p-2 border border-gray-300 rounded" [(ngModel)]="noticeMessage"
+                        placeholder="Type your message here..."
+                        [ngClass]="{ 'border-red-500': noticeError }"></textarea>
+                    <!-- Validation error message -->
+                    <p *ngIf="noticeError" class="text-red-500 text-sm mt-1">
+                        Message is required.
+                    </p>
+                    <div class="flex justify-end space-x-4 mt-4">
+                        <button class="bg-gray-300 hover:bg-gray-400 text-black py-2 px-4 rounded"
+                            (click)="closeNoticeModal()">
+                            Cancel
+                        </button>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+                            (click)="sendNotice()">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <!-- Right Section: Like/Dislike and Report -->
+        </div>
+
+        <!-- Title and Description Section -->
+        <div class="video-details mt-4 p-4 border border-gray-300 rounded-lg">
+            <h2 class="text-2xl font-semibold text-black">{{ title }}</h2>
+            <p class="mt-2 text-gray-700">
+                {{ description }}
+            </p>
+        </div>
+    </div>
+
+    <div class="w-full md:w-1/4 bg-gray-50 border border-gray-300 rounded-lg shadow-lg p-4 h-full overflow-y-auto">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Report Reasons</h3>
+        <ul class="space-y-2">
+
+
+            <li class="flex items-center" *ngFor="let item of reportreason">
+                <span class="w-2.5 h-2.5 bg-red-500 rounded-full mr-3"></span> {{ item.reason }}
+            </li>
+
+        </ul>
+    </div>
+
+
+</section>

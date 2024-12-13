@@ -1,0 +1,63 @@
+<section class="riva-banner-list p-8 mt-14">
+    <div class="container mx-auto p-4">
+
+        <!-- Check if there are reported videos -->
+        <div *ngIf="reportVideos && reportVideos.length > 0; else noReportedVideos">
+            <!-- Banner Items Grid -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full table-auto border-collapse">
+                    <thead class="text-blue-500">
+                        <tr>
+                            <th class="border-dotted border-2 px-4 py-2">Thumbnail</th>
+                            <th class="border-dotted border-2 px-4 py-2">Video Title</th>
+                            <th class="border-dotted border-2 px-4 py-2">Report Reason</th>
+                            <th class="border-dotted border-2 px-4 py-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let rvideo of reportVideos">
+                            <td class="border-dotted border-2 px-4 py-2 text-center">
+                                <img [src]="rvideo.videoDetails.thumbnail" alt="Banner Image"
+                                    class="w-24 h-12 object-cover mx-auto rounded">
+                            </td>
+                            <td class="border-dotted border-2 px-4 py-2">{{rvideo.videoDetails.title}}</td>
+                            <td class="border-dotted border-2 px-4 py-2">
+                                <!-- Loop through the reportReasons array and display each reason -->
+                                <ul>
+                                    <li *ngFor="let reason of rvideo.reportReasons">{{ reason.reason }}</li>
+                                </ul>
+                            </td>
+                            <td class="border-dotted border-2 px-4 py-2 text-center">
+                                <div class="flex flex-col md:flex-row justify-center gap-2">
+                                    <!-- Show "Review Video" button if noticeSent is false -->
+                                    <button *ngIf="rvideo.noticeSent === false"
+                                        (click)="onReportvideoClick(rvideo.videoDetails._id)" type="button"
+                                        class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded">
+                                        Review Video
+                                    </button>
+
+                                    <!-- Show "Notice Sent" button if noticeSent is true -->
+                                    <button *ngIf="rvideo.noticeSent === true" type="button"
+                                        class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded">
+                                        Notice Sent
+                                    </button>
+
+                                 
+
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Template to show when no reported videos are available -->
+        <ng-template #noReportedVideos>
+            <div class="text-center text-gray-500 py-4">
+                No reported videos available.
+            </div>
+        </ng-template>
+
+    </div>
+</section>

@@ -99,6 +99,10 @@
             [ngClass]="{'active': activeTab === 'recommended'}" (click)="setActiveTab('recommended')">
             watch later
         </button>
+        <button class="tab-item py-2 px-4 text-lg font-semibold text-gray-700"
+            [ngClass]="{'active': activeTab === 'reportvideos'}" (click)="setActiveTab('reportvideos')">
+            Report Videos
+        </button>
     </div>
 </section>
 
@@ -205,9 +209,18 @@
 
             <div *ngIf="activeTab === 'recommended'">
                 <h1 class="text-3xl font-bold text-black mb-8">Watch Later Videos</h1>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
-                    @for (movie of watchlatervideos; track movie._id) {
-                    <a class="movie-card relative rounded-lg overflow-hidden shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105"
+
+                <!-- Show "No watch later videos" message if the array is empty -->
+                <div *ngIf="watchlatervideos.length === 0" class="text-center text-gray-500 text-lg">
+                    No watch later videos.
+                </div>
+
+                <!-- Show the videos grid if the array is not empty -->
+                <div *ngIf="watchlatervideos.length > 0"
+                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+                    <!-- Loop through watch later videos -->
+                    <a *ngFor="let movie of watchlatervideos; trackBy: trackByMovieId"
+                        class="movie-card relative rounded-lg overflow-hidden shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105"
                         (click)="onMovieClick(movie.videoDetails._id)">
                         <img [src]="movie.videoDetails.thumbnail" [alt]="movie.title"
                             class="w-full h-[200px] object-cover">
@@ -226,20 +239,74 @@
                                     <span>{{ movie.videoDetails.views }}</span>
                                     <span>{{ movie.videoDetails.visibility }}</span>
                                     <span class="mx-2">•</span>
-
                                 </div>
                             </div>
                         </div>
                     </a>
-                    }
+                </div>
+            </div>
+
+
+            <div *ngIf="activeTab === 'reportvideos'">
+                <h1 class="text-3xl font-bold text-black mb-8">Report Videos</h1>
+
+                <!-- Show "No reported videos" message if array is empty -->
+                <div *ngIf="reportVideos.length === 0" class="text-center text-gray-500 text-lg">
+                    No reported videos.
+                </div>
+
+                <!-- Show the videos grid if array is not empty -->
+                <div *ngIf="reportVideos.length > 0"
+                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+                    <!-- Loop through reported videos -->
+                    <div *ngFor="let rvideo of reportVideos"
+                        class="movie-card relative rounded-lg overflow-hidden shadow-xl cursor-pointer transform transition-transform duration-300 hover:scale-105">
+                        <img [src]="rvideo.videoDetails.thumbnail" [alt]="rvideo.videoDetails.title"
+                            class="w-full h-[200px] object-cover">
+                        <div
+                            class="movie-overlay absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 transition-opacity duration-300 hover:opacity-100">
+                            <div class="absolute bottom-0 p-4 w-full">
+                                <h3 class="text-white font-bold text-lg">{{ rvideo.videoDetails.title }}</h3>
+                                <div class="flex items-center gap-2 text-gray-300 text-sm mt-2">
+                                    <!-- Report reasons -->
+                                    <ul class="list-disc pl-5 text-gray-200">
+                                        <li *ngFor="let reason of rvideo.reasons">{{ reason.reason }}</li>
+                                    </ul>
+                                </div>
+                                <div class="mt-4">
+                                    <!-- Show "Review Video" button if report count > 10 -->
+                                    <button *ngIf="rvideo.videoDetails.report <= 10 || rvideo.noticeSent === true"
+                                        (click)="onReportvideoClick(rvideo.videoId)" type="button"
+                                        class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded">
+                                        Review Video
+                                    </button>
+
+                                    <!-- Show "Details" button if report count <= 10 -->
+                                    <button *ngIf="rvideo.videoDetails.report > 10 && rvideo.noticeSent === false"
+                                        (click)="openreportDetailsmodal()" type="button"
+                                        class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded">
+                                        Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
 
 
         </div>
+
+
+
+
+
+
+
     </div>
 </section>
+
 
 
 
@@ -283,7 +350,27 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div *ngIf="isreportModalOpen" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 w-1/3">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Video Review Notice
+        </h3>
+        <p class="text-gray-700">
+            This video has received more than 10 reports and is currently under review for violating our platform's
+            policies.
+            It will be unavailable for public viewing until it has been reviewed by the admin.
+            Please note, the video will remain inaccessible to the public until the review is complete.
+            We take reports seriously to ensure a safe and positive experience for all users.
+        </p>
 
+        <div class="mt-4 flex justify-end">
+            <button (click)="closereportDetailsmodal()"
+                class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
 
 
 
