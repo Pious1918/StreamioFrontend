@@ -9,8 +9,8 @@ export class UserService {
   private searchTermSubject = new BehaviorSubject<string>('');
   searchTerm$ = this.searchTermSubject.asObservable();
 
-  private userServiceUrl = 'http://localhost:5000/user-service'
-  private videoServiceUrl = 'http://localhost:5000/video-service'
+  private userServiceUrl = 'http://localhost/user-service'
+  private videoServiceUrl = 'http://localhost/video-service'
 
   constructor(private http: HttpClient) { }
 

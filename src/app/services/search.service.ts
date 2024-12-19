@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SearchService {
-  private _userServiceUrl = 'http://localhost:5000/user-service';
+  private _userServiceUrl = 'http://localhost/user-service';
 
   constructor(private _http:HttpClient) { }
 

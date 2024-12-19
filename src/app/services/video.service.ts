@@ -7,8 +7,8 @@ import { IvideoDocument } from '../pages/user-home/home.component';
   providedIn: 'root'
 })
 export class VideoService {
-  private _videoServiceUrl = 'http://localhost:5000/video-service'
-  private _commentServiceUrl = 'http://localhost:5000/comment-service'
+  private _videoServiceUrl = 'http://localhost/video-service'
+  private _commentServiceUrl = 'http://localhost/comment-service'
   constructor(private _http:HttpClient) { }
 
 

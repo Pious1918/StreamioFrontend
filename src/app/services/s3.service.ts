@@ -11,9 +11,9 @@ export class S3Service {
 
 
 
-  private _userServiceUrl = 'http://localhost:5000/user-service'
-  private _videoServiceUrl = 'http://localhost:5000/video-service'
-  private _liveServiceUrl = 'http://localhost:5000/live-service'
+  private _userServiceUrl = 'http://localhost/user-service'
+  private _videoServiceUrl = 'http://localhost/video-service'
+  private _liveServiceUrl = 'http://localhost/live-service'
 
 
 

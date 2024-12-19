@@ -5,8 +5,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AdminService {
-  private userServiceUrl = 'http://localhost:5000/user-service'
-  private videoServiceUrl = 'http://localhost:5000/video-service'
+  private userServiceUrl = 'http://localhost/user-service'
+  private videoServiceUrl = 'http://localhost/video-service'
 
   constructor(private http: HttpClient) { }
 

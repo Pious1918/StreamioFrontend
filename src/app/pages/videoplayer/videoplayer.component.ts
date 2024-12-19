@@ -75,7 +75,7 @@ export class VideoplayerComponent {
   subscribed!: string | boolean;
 
   constructor(private _videoservice: VideoService, private _route: ActivatedRoute, private fb: FormBuilder, private http: HttpClient, private router: Router) {
-    this.socket = io('http://localhost:5002');
+    
 
     this.emojiPicker = new Picker();
 
@@ -265,7 +265,7 @@ export class VideoplayerComponent {
 
 
   postComment(commentData: { comment: string, videoId: string }): Observable<any> {
-    const apiUrl = 'http://localhost:5000/comment-service/comments';
+    const apiUrl = 'http://localhost/comment-service/comments';
     return this.http.post<any>(apiUrl, commentData);
   }
 
