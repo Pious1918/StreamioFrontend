@@ -9,8 +9,8 @@ export class UserService {
   private searchTermSubject = new BehaviorSubject<string>('');
   searchTerm$ = this.searchTermSubject.asObservable();
 
-  private userServiceUrl = 'http://localhost/user-service'
-  private videoServiceUrl = 'http://localhost/video-service'
+  private userServiceUrl = 'https://streamiobackend.ddns.net/user-service'
+  private videoServiceUrl = 'https://streamiobackend.ddns.net/video-service'
 
   constructor(private http: HttpClient) { }
 
