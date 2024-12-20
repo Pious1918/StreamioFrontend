@@ -11,9 +11,9 @@ export class S3Service {
 
 
 
-  private _userServiceUrl = 'http://localhost/user-service'
-  private _videoServiceUrl = 'http://localhost/video-service'
-  private _liveServiceUrl = 'http://localhost/live-service'
+  private _userServiceUrl = 'https://streamiobackend.ddns.net/user-service'
+  private _videoServiceUrl = 'https://streamiobackend.ddns.net/video-service'
+  private _liveServiceUrl = 'https://streamiobackend.ddns.net/live-service'
 
 
 

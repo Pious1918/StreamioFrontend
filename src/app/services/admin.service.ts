@@ -5,8 +5,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AdminService {
-  private userServiceUrl = 'http://localhost/user-service'
-  private videoServiceUrl = 'http://localhost/video-service'
+  private userServiceUrl = 'https://streamiobackend.ddns.net/user-service'
+  private videoServiceUrl = 'https://streamiobackend.ddns.net/video-service'
 
   constructor(private http: HttpClient) { }
 

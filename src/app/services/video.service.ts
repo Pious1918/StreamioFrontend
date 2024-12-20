@@ -7,8 +7,8 @@ import { IvideoDocument } from '../pages/user-home/home.component';
   providedIn: 'root'
 })
 export class VideoService {
-  private _videoServiceUrl = 'http://localhost/video-service'
-  private _commentServiceUrl = 'http://localhost/comment-service'
+  private _videoServiceUrl = 'https://streamiobackend.ddns.net/video-service'
+  private _commentServiceUrl = 'https://streamiobackend.ddns.net/comment-service'
   constructor(private _http:HttpClient) { }
 
 

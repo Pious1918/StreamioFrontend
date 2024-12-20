@@ -174,7 +174,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   }
 
-  private _liveServiceUrl = 'http://localhost:5000/live-service'
+  private _liveServiceUrl = 'https://streamiobackend.ddns.net/live-service'
 
 
   startLive() {

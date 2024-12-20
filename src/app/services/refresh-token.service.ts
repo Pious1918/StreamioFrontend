@@ -12,7 +12,7 @@ export class RefreshTokenService {
 
   
 
-  private _refreshtokenUrl = 'http://localhost/user-service/refresh-token'
+  private _refreshtokenUrl = 'https://streamiobackend.ddns.net/user-service/refresh-token'
   constructor(private _http:HttpClient , private router:Router) { }
 
   refreshToken(){

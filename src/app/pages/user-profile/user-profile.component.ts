@@ -282,7 +282,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     const fileName = this.selectedFile.name;
     const fileType = this.selectedFile.type;
     //generating presigned url
-    const presignedUrlResponse: any = await this._http.post('http://localhost/user-service/generate-presigned-url', { fileName, fileType }).toPromise();
+    const presignedUrlResponse: any = await this._http.post('https://streamiobackend.ddns.net/user-service/generate-presigned-url', { fileName, fileType }).toPromise();
     const presignedUrl = presignedUrlResponse.presignedUrl;
 
     console.log("pressere", presignedUrl)

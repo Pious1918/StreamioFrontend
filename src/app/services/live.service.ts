@@ -10,7 +10,7 @@ export class LiveService {
   private _formDataSubject = new BehaviorSubject<{title:string, description:string, imageurl:string} | null>(null);
   formData$= this._formDataSubject.asObservable()
 
-  private _liveServiceUrl = 'http://localhost/live-service'
+  private _liveServiceUrl = 'https://streamiobackend.ddns.net/live-service'
 
 
   private streamDataSubject = new BehaviorSubject<any>(null);

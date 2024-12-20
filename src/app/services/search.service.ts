@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SearchService {
-  private _userServiceUrl = 'http://localhost/user-service';
+  private _userServiceUrl = 'https://streamiobackend.ddns.net/user-service';
 
   constructor(private _http:HttpClient) { }
 
