@@ -9,13 +9,8 @@ export class UserService {
   private searchTermSubject = new BehaviorSubject<string>('');
   searchTerm$ = this.searchTermSubject.asObservable();
 
-  // private userServiceUrl = 'http://localhost/user-service'
-  // private videoServiceUrl = 'http://localhost/video-service'
-
-  private userServiceUrl = 'http://streamio-frontend-kzuy.vercel.app/api/user-service'; // Updated to match ingress route for api-gateway
-  private videoServiceUrl = 'http://streamio-frontend-kzuy.vercel.app/api/video-service'; // Updated to match ingress route for live-service
-  
-
+  private userServiceUrl = 'http://localhost/user-service'
+  private videoServiceUrl = 'http://localhost/video-service'
 
   constructor(private http: HttpClient) { }
 
