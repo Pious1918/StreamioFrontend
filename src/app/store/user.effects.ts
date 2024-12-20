@@ -65,7 +65,7 @@ export class UserEffects {
       switchMap((action) => {
         const { s3FileUrl } = action;
 
-        return this._http.post<IUpdateProfilePictureResponse>('http://localhost:5000/user-service/uploadProfilePicture',  { s3FileUrl }).pipe(
+        return this._http.post<IUpdateProfilePictureResponse>('http://streamiobackend.ddns.net/user-service/uploadProfilePicture',  { s3FileUrl }).pipe(
           // handling success and failure 
           map(user => {
             console.log(user, "USER FROM EFFECTS");

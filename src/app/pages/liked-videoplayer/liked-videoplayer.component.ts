@@ -217,7 +217,7 @@ export class LikedVideoplayerComponent {
 
 
   postComment(commentData: { comment: string, videoId: string }): Observable<any> {
-    const apiUrl = 'http://localhost:5000/comment-service/comments';
+    const apiUrl = 'https://streamiobackend.ddns.net/comment-service/comments';
     return this.http.post<any>(apiUrl, commentData);
   }
 
@@ -360,7 +360,7 @@ export class LikedVideoplayerComponent {
   
   onMovieClick(movieId: string): void {
     console.log("videoid @ onclicik",movieId)
-    const url = `http://localhost:4200/likedvideo/${movieId}`; // Construct the full URL
+    const url = `https://streamio-frontend-kzuy.vercel.app/likedvideo/${movieId}`; // Construct the full URL
     console.log("Navigating to URL:", url);
     window.location.href = url; // Navigate to the constructed URL
   }
