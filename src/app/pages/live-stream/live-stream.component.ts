@@ -55,7 +55,7 @@ export class LiveStreamComponent implements OnInit {
   constructor(private _userService: UserService, private _liveservice: LiveService) {
     // this.socket = io('http://localhost:5005');
 
-    this.socket = io('https://streamiobackend.ddns.net/live');
+    this.socket = io('https://streamiobackend.ddns.net/live-service');
 
 
 
