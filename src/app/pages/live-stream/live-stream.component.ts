@@ -57,8 +57,15 @@ export class LiveStreamComponent implements OnInit {
 
     // this.socket = io('https://streamiobackend.ddns.net/live-service');
 
-    this.socket = io('https://streamiobackend.ddns.net/live-service/socket.io');
+    // this.socket = io('https://streamiobackend.ddns.net/live-service/socket.io');
 
+
+    this.socket = io('https://streamiobackend.ddns.net', {
+      path: '/live-service/socket.io', // Explicitly set the custom path
+      transports: ['websocket', 'polling'], // Ensure compatibility with the server
+      withCredentials: true, // Allow cross-origin cookies and credentials
+    });
+    
 
     // this.socket = io('http://localhost/live-service', {
     //   path: '/live-service/socket.io',
