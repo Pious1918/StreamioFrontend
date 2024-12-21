@@ -42,7 +42,7 @@ export class LiveViewerComponent implements OnInit ,AfterViewInit{
     // this.socket = io('http://localhost:5005')
     // this.socket = io('https://streamiobackend.ddns.net/live-service')
 
-    this.socket = io('https://streamiobackend.ddns.net/live-service/connectsocket');
+    this.socket = io('https://streamiobackend.ddns.net/live-service');
 
     this.socket.on('connect', () => {
       console.log('Connected to socket server');
