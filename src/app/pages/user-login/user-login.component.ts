@@ -137,6 +137,9 @@ export class UserLoginComponent implements OnDestroy {
     }
   }
 
+
+  existMessages: { email?: string; username?: string } = {};
+
   onRegisterSubmit() {
     if (this.registerForm.valid) {
       console.log('Register Data:', this.registerForm.value);
@@ -152,14 +155,21 @@ export class UserLoginComponent implements OnDestroy {
       console.log('userData Data:', userData);
 
 
-      const registerSub = this._userservice.registerUser(userData).subscribe((res: any) => {
-        console.log("new user added successfully", res)
-        localStorage.setItem('authtoken', res.token)
+   const registerSub = this._userservice.registerUser(userData).subscribe((res: any) => {
+      if (res.existmessages) {
+        // Assign backend validation errors to `existMessages`
+        this.existMessages = res.existmessages;
+      } else {
+        // Clear previous messages if successful
+        this.existMessages = {};
 
-        this._router.navigate(['/'])
-        this.showsuccess()
-
-      })
+        // Handle success
+        console.log("New user added successfully", res);
+        localStorage.setItem('authtoken', res.token);
+        this._router.navigate(['/']);
+        this.showsuccess();
+      }
+    });
 
       this._subscription.add(registerSub)
     }

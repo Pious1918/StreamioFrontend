@@ -39,8 +39,7 @@ export class LiveViewerComponent implements OnInit ,AfterViewInit{
 
   constructor(private _userService: UserService, private _route: ActivatedRoute, private _liveservice: LiveService) {
    
-    // this.socket = io('http://localhost:5005')
-    // this.socket = io('https://streamiobackend.ddns.net/live-service')
+
 
     this.socket = io('wss://streamiobackend.ddns.net', {
       path: '/socket.io',  // This should match the path in both API Gateway and backend

@@ -69,6 +69,9 @@
                     <p class="text-red-700"
                         *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('required')">
                         Email is required</p>
+                    <p class="text-red-700" *ngIf="existMessages.email">
+                        {{ existMessages.email }}
+                    </p>
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700">Username</label>
