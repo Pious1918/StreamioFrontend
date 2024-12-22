@@ -86,6 +86,9 @@
                         *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.hasError('minlength')">
                         Username must be at least 3 characters long
                     </p>
+                    <p class="text-red-700" *ngIf="existMessages.username">
+                        {{ existMessages.username }}
+                      </p>
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700">Password</label>
