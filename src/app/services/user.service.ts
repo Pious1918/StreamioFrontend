@@ -40,7 +40,7 @@ export class UserService {
   }
 
   getBanneruser(){
-    return this.http.get(`${this.userServiceUrl}/getbanneruser`)
+    return this.http.get(`${this.userServiceUrl}/banneruser`)
   }
 
 
