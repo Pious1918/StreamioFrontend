@@ -191,7 +191,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   loadBanners(){
     
-    this._userService.getBanners().subscribe((res:any)=>{
+    this._userService.getBanneruser().subscribe((res:any)=>{
       console.log("banner response is ",res)
 
       this.items=res.getbanner

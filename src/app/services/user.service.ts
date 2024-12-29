@@ -39,6 +39,10 @@ export class UserService {
     return this.http.get(`${this.userServiceUrl}/getbanner`)
   }
 
+  getBanneruser(){
+    return this.http.get(`${this.userServiceUrl}/getbanneruser`)
+  }
+
 
   deleteBannerfromS3(imageurl:string){
     return this.http.post(`${this.userServiceUrl}/deletefroms3`,{imageurl})

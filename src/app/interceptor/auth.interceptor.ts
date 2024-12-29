@@ -15,6 +15,7 @@ if (req.url.includes('amazonaws.com')) {
     "/userlist",
     "/savebanner",
     "/deletebanner",
+    "/getbanner",
     "/countuser",
     "/topfive",
     "/reportvideosAdmin",
