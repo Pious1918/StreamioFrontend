@@ -86,14 +86,7 @@ export class UserLoginComponent implements OnDestroy {
       console.log("userdata", userdata)
       this.errorMessage = ''; // Clear any previous error messages
 
-      // const loginSub=this._userservice.loginUser(userdata).subscribe((res: any) => {
-      //   console.log("Login successfully", res)
-
-      //   localStorage.setItem('authtoken', res.token)
-      //   localStorage.setItem('userRefreshtoken',res.userRefreshtoken)
-      //   this._router.navigate(['/'])
-      //   this.showsuccess()
-      // })
+   
 
       const loginSub = this._userservice.loginUser(userdata).subscribe({
         next: (res: any) => {
@@ -124,9 +117,9 @@ export class UserLoginComponent implements OnDestroy {
 
       icon: 'success',
       toast: true,
-      position: 'top-end', // Common toast position for a notification
-      showConfirmButton: false, // Optional: No confirm button for toast
-      timer: 3000 // Display for 3 seconds
+      position: 'top-end', 
+      showConfirmButton: false, 
+      timer: 3000 
     });
   }
 

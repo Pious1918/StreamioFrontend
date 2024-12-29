@@ -9,7 +9,7 @@ if (req.url.includes('amazonaws.com')) {
   return next(req);  // Pass the request without adding the Authorization header
 }
 
-  const token :string = localStorage.getItem('authtoken') ?? "";
+  const token :string = localStorage.getItem('authtoken') ?? localStorage.getItem('admintoken') ?? "";
   console.log("requst from inter",req)
   const authReq = req.clone({
     headers: req.headers.set('Authorization', `Bearer ${token}`)
