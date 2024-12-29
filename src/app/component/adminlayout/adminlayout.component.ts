@@ -5,7 +5,7 @@ import { RouterLink, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-adminlayout',
   standalone: true,
-  imports: [AdminHeaderComponent,RouterLink,RouterModule],
+  imports: [AdminHeaderComponent,RouterModule],
   templateUrl: './adminlayout.component.html',
   styleUrl: './adminlayout.component.css'
 })

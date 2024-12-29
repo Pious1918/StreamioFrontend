@@ -90,9 +90,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     }, this.timeAutonext);
 
 
+ 
+  }
+
+  ngAfterViewInit(): void {
+
     this.loadBanners()
     this.loadVideos(this.tab)
+
   }
+
 
   ngOnDestroy(): void {
     // Clear all timeouts when the component is destroyed to prevent memory leaks
